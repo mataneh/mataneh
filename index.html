@@ -3444,16 +3444,17 @@ function showMobileWarning() {
             justify-content: center;
             align-items: center;
             font-family: 'Vazirmatn', sans-serif;
+            padding: 20px;
         }
         
         .mobile-warning-container {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
             border-radius: 25px;
-            padding: 30px;
+            padding: 35px 30px;
             text-align: center;
             max-width: 90%;
-            width: 400px;
+            width: 420px;
             box-shadow: 
                 0 20px 40px rgba(0, 0, 0, 0.1),
                 0 0 0 1px rgba(255, 255, 255, 0.2);
@@ -3480,18 +3481,18 @@ function showMobileWarning() {
         }
         
         .warning-icon {
-            font-size: 4rem;
+            font-size: 4.5rem;
             color: #e74c3c;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             animation: bounce 2s infinite, pulse 2s infinite;
             display: inline-block;
         }
         
         .warning-title {
-            font-size: 1.8rem;
+            font-size: 1.9rem;
             font-weight: bold;
             color: #2c3e50;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             font-family: 'Lalezar', cursive;
             background: linear-gradient(135deg, #e74c3c, #c0392b);
             -webkit-background-clip: text;
@@ -3500,18 +3501,18 @@ function showMobileWarning() {
         }
         
         .warning-message {
-            font-size: 1.1rem;
+            font-size: 1.15rem;
             color: #34495e;
-            line-height: 1.6;
-            margin-bottom: 25px;
+            line-height: 1.7;
+            margin-bottom: 30px;
             text-align: center;
         }
         
         .warning-features {
             background: rgba(52, 152, 219, 0.1);
-            border-radius: 15px;
-            padding: 20px;
-            margin: 20px 0;
+            border-radius: 18px;
+            padding: 25px;
+            margin: 25px 0;
             border-right: 4px solid #3498db;
         }
         
@@ -3519,9 +3520,10 @@ function showMobileWarning() {
             display: flex;
             align-items: center;
             justify-content: right;
-            margin-bottom: 10px;
-            font-size: 0.95rem;
+            margin-bottom: 12px;
+            font-size: 1rem;
             color: #2c3e50;
+            padding: 8px 0;
         }
         
         .feature-item:last-child {
@@ -3530,41 +3532,42 @@ function showMobileWarning() {
         
         .feature-icon {
             color: #27ae60;
-            margin-left: 10px;
-            font-size: 1.1rem;
+            margin-left: 12px;
+            font-size: 1.2rem;
             animation: bounce 2s infinite 1s;
         }
         
         .warning-countdown {
-            font-size: 1rem;
+            font-size: 1.1rem;
             color: #e74c3c;
             font-weight: bold;
-            margin: 15px 0;
-            padding: 10px;
+            margin: 20px 0;
+            padding: 12px;
             background: rgba(231, 76, 60, 0.1);
-            border-radius: 10px;
+            border-radius: 12px;
             animation: pulse 2s infinite;
+            border: 2px dashed rgba(231, 76, 60, 0.3);
         }
         
         .warning-actions {
             display: flex;
             gap: 15px;
             justify-content: center;
-            margin-top: 25px;
+            margin-top: 30px;
         }
         
         .warning-btn {
-            flex: 1;
-            padding: 15px 25px;
+            padding: 16px 35px;
             border: none;
-            border-radius: 15px;
-            font-size: 1rem;
+            border-radius: 18px;
+            font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             font-family: 'Vazirmatn', sans-serif;
             position: relative;
             overflow: hidden;
+            min-width: 150px;
         }
         
         .warning-btn::before {
@@ -3583,41 +3586,30 @@ function showMobileWarning() {
         }
         
         .btn-primary {
-            background: linear-gradient(135deg, #3498db, #2980b9);
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
             color: white;
-            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+            box-shadow: 0 5px 20px rgba(231, 76, 60, 0.4);
         }
         
         .btn-primary:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.6);
-        }
-        
-        .btn-secondary {
-            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
-            color: white;
-            box-shadow: 0 5px 15px rgba(149, 165, 166, 0.4);
-        }
-        
-        .btn-secondary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(149, 165, 166, 0.6);
+            box-shadow: 0 8px 30px rgba(231, 76, 60, 0.6);
         }
         
         .progress-bar {
             width: 100%;
-            height: 6px;
+            height: 8px;
             background: rgba(236, 240, 241, 0.5);
-            border-radius: 3px;
-            margin: 20px 0;
+            border-radius: 4px;
+            margin: 25px 0;
             overflow: hidden;
         }
         
         .progress-fill {
             height: 100%;
             background: linear-gradient(90deg, #e74c3c, #c0392b);
-            border-radius: 3px;
-            animation: progress 5s linear forwards;
+            border-radius: 4px;
+            animation: progress 8s linear forwards;
         }
         
         @keyframes progress {
@@ -3636,37 +3628,70 @@ function showMobileWarning() {
         
         .floating-element {
             position: absolute;
-            font-size: 1.5rem;
-            opacity: 0.1;
-            animation: float 6s ease-in-out infinite;
+            font-size: 1.8rem;
+            opacity: 0.15;
+            animation: float 8s ease-in-out infinite;
         }
         
         .floating-element:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
-        .floating-element:nth-child(2) { top: 20%; right: 15%; animation-delay: 1s; }
-        .floating-element:nth-child(3) { bottom: 30%; left: 20%; animation-delay: 2s; }
-        .floating-element:nth-child(4) { bottom: 15%; right: 25%; animation-delay: 3s; }
-        .floating-element:nth-child(5) { top: 40%; left: 30%; animation-delay: 4s; }
+        .floating-element:nth-child(2) { top: 20%; right: 15%; animation-delay: 2s; }
+        .floating-element:nth-child(3) { bottom: 30%; left: 20%; animation-delay: 4s; }
+        .floating-element:nth-child(4) { bottom: 15%; right: 25%; animation-delay: 6s; }
+        .floating-element:nth-child(5) { top: 40%; left: 30%; animation-delay: 1s; }
+        .floating-element:nth-child(6) { top: 60%; right: 10%; animation-delay: 3s; }
+        
+        .contact-info {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(52, 152, 219, 0.08);
+            border-radius: 12px;
+            border-right: 3px solid #3498db;
+        }
+        
+        .contact-text {
+            font-size: 0.95rem;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        
+        .contact-email {
+            font-size: 1rem;
+            color: #e74c3c;
+            font-weight: bold;
+            direction: ltr;
+            display: inline-block;
+        }
         
         @media (max-width: 480px) {
             .mobile-warning-container {
-                padding: 25px 20px;
-                margin: 20px;
+                padding: 30px 20px;
+                margin: 15px;
             }
             
             .warning-icon {
-                font-size: 3rem;
+                font-size: 3.5rem;
             }
             
             .warning-title {
-                font-size: 1.5rem;
+                font-size: 1.6rem;
             }
             
             .warning-message {
-                font-size: 1rem;
+                font-size: 1.05rem;
             }
             
-            .warning-actions {
-                flex-direction: column;
+            .warning-features {
+                padding: 20px 15px;
+            }
+            
+            .feature-item {
+                font-size: 0.95rem;
+            }
+            
+            .warning-btn {
+                padding: 14px 25px;
+                font-size: 1rem;
+                min-width: 130px;
             }
         }
     `;
@@ -3685,6 +3710,7 @@ function showMobileWarning() {
             <div class="floating-element">⚡</div>
             <div class="floating-element">🔧</div>
             <div class="floating-element">💻</div>
+            <div class="floating-element">📵</div>
         </div>
         
         <div class="mobile-warning-container">
@@ -3715,8 +3741,13 @@ function showMobileWarning() {
                 </div>
             </div>
             
+            <div class="contact-info">
+                <div class="contact-text">برای اطلاعات بیشتر با پشتیبانی تماس بگیرید:</div>
+                <div class="contact-email">support@matane.com</div>
+            </div>
+            
             <div class="warning-countdown" id="countdown">
-                ⏰ برآورد زمان: به زودی...
+                ⏰ در حال بروزرسانی...
             </div>
             
             <div class="progress-bar">
@@ -3724,13 +3755,9 @@ function showMobileWarning() {
             </div>
             
             <div class="warning-actions">
-                <button class="warning-btn btn-primary" onclick="redirectToDesktop()">
-                    <i class="fas fa-desktop"></i>
-                    ادامه با دسکتاپ
-                </button>
-                <button class="warning-btn btn-secondary" onclick="closeMobileWarning()">
-                    <i class="fas fa-times"></i>
-                    بستن
+                <button class="warning-btn btn-primary" onclick="closeMobileWarning()">
+                    <i class="fas fa-check-circle"></i>
+                    متوجه شدم
                 </button>
             </div>
         </div>
@@ -3748,25 +3775,29 @@ function showMobileWarning() {
 // تابع شمارش معکوس
 function startCountdown() {
     const countdownElement = document.getElementById('countdown');
-    let seconds = 5;
+    const messages = [
+        "🔄 در حال بروزرسانی...",
+        "⚡ بهینه سازی برای موبایل",
+        "🔧 رفع باگ‌های فنی",
+        "🎨 بهبود طراحی رابط کاربری",
+        "🚀 آماده سازی نسخه موبایل"
+    ];
     
-    const countdownInterval = setInterval(() => {
-        countdownElement.innerHTML = `⏰ برآورد زمان: ${seconds} ثانیه`;
-        seconds--;
-        
-        if (seconds < 0) {
-            clearInterval(countdownInterval);
-            countdownElement.innerHTML = `⏰ به زودی در دسترس خواهد شد...`;
-        }
-    }, 1000);
-}
-
-// تابع هدایت به نسخه دسکتاپ
-function redirectToDesktop() {
-    // می‌توانید کاربر را به صفحه خاصی هدایت کنید
-    // یا پیام خاصی نمایش دهید
-    alert('لطفاً از دستگاه دسکتاپ یا لپ‌تاپ استفاده نمایید.');
-    closeMobileWarning();
+    let currentIndex = 0;
+    
+    const messageInterval = setInterval(() => {
+        countdownElement.innerHTML = messages[currentIndex];
+        currentIndex = (currentIndex + 1) % messages.length;
+    }, 2000);
+    
+    // توقف اتوماتیک بعد از 15 ثانیه
+    setTimeout(() => {
+        clearInterval(messageInterval);
+        countdownElement.innerHTML = "✅ به زودی در دسترس خواهد شد";
+        countdownElement.style.background = "rgba(46, 204, 113, 0.1)";
+        countdownElement.style.color = "#27ae60";
+        countdownElement.style.border = "2px dashed rgba(46, 204, 113, 0.3)";
+    }, 15000);
 }
 
 // تابع بستن پیام
@@ -3775,15 +3806,18 @@ function closeMobileWarning() {
     const styles = document.getElementById('mobile-warning-styles');
     
     if (overlay) {
-        overlay.style.animation = 'fadeOut 0.5s ease-in-out forwards';
+        // انیمیشن خروج
+        overlay.style.animation = 'fadeOut 0.6s ease-in-out forwards';
         setTimeout(() => {
             overlay.remove();
             document.body.style.overflow = 'auto';
-        }, 500);
+        }, 600);
     }
     
     if (styles) {
-        styles.remove();
+        setTimeout(() => {
+            styles.remove();
+        }, 1000);
     }
 }
 
@@ -3793,8 +3827,8 @@ function checkMobileAndShowWarning() {
     const viewportWidth = window.innerWidth;
     
     if (isMobile || viewportWidth < 768) {
-        // کمی تاخیر برای بهتر شدن تجربه کاربر
-        setTimeout(showMobileWarning, 1000);
+        // تاخیر برای بهتر شدن تجربه کاربر
+        setTimeout(showMobileWarning, 800);
         return true;
     }
     return false;
@@ -3806,11 +3840,11 @@ fadeOutStyle.innerHTML = `
     @keyframes fadeOut {
         from {
             opacity: 1;
-            transform: scale(1);
+            transform: scale(1) translateY(0);
         }
         to {
             opacity: 0;
-            transform: scale(0.8);
+            transform: scale(0.7) translateY(50px);
         }
     }
 `;
@@ -3818,13 +3852,12 @@ document.head.appendChild(fadeOutStyle);
 
 // اجرای تابع هنگام لود صفحه
 document.addEventListener('DOMContentLoaded', function() {
-    // تاخیر کمی برای بهتر شدن تجربه کاربر
-    setTimeout(checkMobileAndShowWarning, 500);
+    setTimeout(checkMobileAndShowWarning, 300);
 });
 
-// همچنین برای زمانی که کاربر صفحه را می‌چرخاند
+// برای زمانی که کاربر صفحه را می‌چرخاند
 window.addEventListener('orientationchange', function() {
-    setTimeout(checkMobileAndShowWarning, 300);
+    setTimeout(checkMobileAndShowWarning, 400);
 });
     
 
