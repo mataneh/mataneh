@@ -3525,12 +3525,18 @@ function adjustLayoutForMobile() {
 }
     
 
+// تابع مدیریت پنل کاربران در موبایل
 function initMobileUsersPanel() {
-    // تشخیص دستگاه موبایل
+    // فقط در صفحه چت و برای موبایل فعال شود
+    if (!document.getElementById('chatContainer') || 
+        document.getElementById('chatContainer').style.display === 'none') {
+        return false;
+    }
+
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     const viewportWidth = window.innerWidth;
     
-    if (isMobile || viewportWidth < 768) {
+    if ((isMobile || viewportWidth < 768) && !document.getElementById('mobileUsersPanel')) {
         createMobileUsersPanel();
         return true;
     }
@@ -3538,10 +3544,19 @@ function initMobileUsersPanel() {
 }
 
 function createMobileUsersPanel() {
+    // اگر از قبل وجود دارد، حذف کن
+    const existingPanel = document.getElementById('mobileUsersPanel');
+    const existingOverlay = document.getElementById('mobileUsersOverlay');
+    const existingMenuBtn = document.getElementById('mobileMenuBtn');
+    
+    if (existingPanel) existingPanel.remove();
+    if (existingOverlay) existingOverlay.remove();
+    if (existingMenuBtn) existingMenuBtn.remove();
+
     // اضافه کردن استایل‌های مخصوص موبایل
     const style = document.createElement('style');
+    style.id = 'mobile-users-styles';
     style.innerHTML = `
-        /* استایل‌های مخصوص پنل کاربران در موبایل */
         .mobile-users-panel {
             position: fixed;
             top: 0;
@@ -3576,7 +3591,7 @@ function createMobileUsersPanel() {
         }
         
         .mobile-users-header {
-            padding: 15px;
+            padding: 20px 15px;
             background: linear-gradient(90deg, #4776E6 0%, #8E54E9 100%);
             color: white;
             display: flex;
@@ -3589,178 +3604,231 @@ function createMobileUsersPanel() {
             background: none;
             border: none;
             color: white;
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             cursor: pointer;
+            padding: 5px;
         }
         
         .mobile-users-content {
             flex: 1;
             overflow-y: auto;
+            background: #f8f9fa;
         }
         
         .mobile-menu-btn {
             position: fixed;
-            top: 15px;
-            right: 15px;
+            top: 80px;
+            right: 20px;
             background: linear-gradient(90deg, #4776E6 0%, #8E54E9 100%);
             color: white;
             border: none;
             border-radius: 50%;
             width: 50px;
             height: 50px;
-            display: flex;
+            display: none;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             z-index: 998;
             box-shadow: 0 4px 12px rgba(71, 118, 230, 0.3);
-            transition: transform 0.3s ease;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
         }
         
         .mobile-menu-btn:hover {
             transform: scale(1.1);
+            box-shadow: 0 6px 15px rgba(71, 118, 230, 0.4);
         }
         
-        .mobile-menu-btn i {
-            font-size: 1.2rem;
+        .mobile-menu-btn.active {
+            display: flex;
         }
         
-        /* مخفی کردن پنل کاربران اصلی در دسکتاپ */
         @media (max-width: 768px) {
             .users-panel {
                 display: none !important;
-            }
-            
-            .chat-main {
-                width: 100% !important;
             }
             
             .mobile-menu-btn {
                 display: flex !important;
             }
         }
-        
-        /* استایل‌های اضافی برای بهتر شدن نمایش در موبایل */
-        .user-item {
-            padding: 15px !important;
-            border-bottom: 1px solid #f0f0f0 !important;
-        }
-        
-        .user-avatar-small {
-            width: 50px !important;
-            height: 50px !important;
-            margin-left: 15px !important;
-        }
-        
-        .user-name {
-            font-size: 16px !important;
-        }
-        
-        .user-username {
-            font-size: 14px !important;
-        }
     `;
     
-    document.head.appendChild(style);
-    
+    // اگر استایل از قبل وجود ندارد، اضافه کن
+    if (!document.getElementById('mobile-users-styles')) {
+        document.head.appendChild(style);
+    }
+
     // ایجاد پنل کاربران موبایل
     const mobileUsersPanel = document.createElement('div');
+    mobileUsersPanel.id = 'mobileUsersPanel';
     mobileUsersPanel.className = 'mobile-users-panel';
-    mobileUsersPanel.innerHTML = `
-        <div class="mobile-users-header">
-            <h3>کاربران</h3>
-            <button class="mobile-users-close">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div class="mobile-users-content">
-            ${document.querySelector('.users-panel').innerHTML}
-        </div>
-    `;
     
+    // کپی محتوای پنل کاربران اصلی
+    const originalUsersPanel = document.querySelector('.users-panel');
+    if (originalUsersPanel) {
+        mobileUsersPanel.innerHTML = `
+            <div class="mobile-users-header">
+                <h3 style="margin: 0; font-size: 1.3rem;">👥 کاربران</h3>
+                <button class="mobile-users-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="mobile-users-content">
+                ${originalUsersPanel.innerHTML}
+            </div>
+        `;
+    }
+
     // ایجاد overlay
     const overlay = document.createElement('div');
+    overlay.id = 'mobileUsersOverlay';
     overlay.className = 'mobile-users-overlay';
-    
+
     // ایجاد دکمه منو
     const menuBtn = document.createElement('button');
+    menuBtn.id = 'mobileMenuBtn';
     menuBtn.className = 'mobile-menu-btn';
     menuBtn.innerHTML = '<i class="fas fa-users"></i>';
-    menuBtn.style.display = 'none';
-    
+    menuBtn.title = 'نمایش لیست کاربران';
+
     // اضافه کردن به صفحه
     document.body.appendChild(mobileUsersPanel);
     document.body.appendChild(overlay);
     document.body.appendChild(menuBtn);
-    
+
     // رویدادهای کلیک
     menuBtn.addEventListener('click', function() {
         mobileUsersPanel.classList.add('active');
         overlay.classList.add('active');
         document.body.style.overflow = 'hidden';
+        updateMobileUsersList();
     });
-    
-    overlay.addEventListener('click', function() {
-        mobileUsersPanel.classList.remove('active');
-        overlay.classList.remove('active');
-        document.body.style.overflow = 'auto';
-    });
+
+    overlay.addEventListener('click', closeMobilePanel);
     
     const closeBtn = mobileUsersPanel.querySelector('.mobile-users-close');
-    closeBtn.addEventListener('click', function() {
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeMobilePanel);
+    }
+
+    // تابع برای بستن پنل
+    function closeMobilePanel() {
         mobileUsersPanel.classList.remove('active');
         overlay.classList.remove('active');
         document.body.style.overflow = 'auto';
-    });
-    
-    // نمایش دکمه منو
-    menuBtn.style.display = 'flex';
-    
-    // به‌روزرسانی لیست کاربران وقتی پنل باز می‌شود
-    const originalLoadUsersList = window.loadUsersList;
-    if (originalLoadUsersList) {
-        window.loadUsersList = function() {
-            originalLoadUsersList();
-            // کپی لیست کاربران به پنل موبایل
-            const mobileUsersList = mobileUsersPanel.querySelector('.users-list');
-            if (mobileUsersList) {
-                mobileUsersList.innerHTML = document.querySelector('.users-list').innerHTML;
-                
-                // اضافه کردن event listener برای آیتم‌های کاربر
-                const userItems = mobileUsersList.querySelectorAll('.user-item');
-                userItems.forEach(item => {
-                    item.addEventListener('click', function() {
-                        // بستن پنل وقتی کاربری انتخاب شد
-                        mobileUsersPanel.classList.remove('active');
-                        overlay.classList.remove('active');
-                        document.body.style.overflow = 'auto';
-                        
-                        // انتخاب کاربر (با استفاده از تابع موجود)
-                        const username = this.querySelector('.user-username').textContent.replace('@', '');
+    }
+
+    // تابع برای به‌روزرسانی لیست کاربران در پنل موبایل
+    function updateMobileUsersList() {
+        const mobileUsersList = mobileUsersPanel.querySelector('.users-list');
+        const originalUsersList = document.querySelector('.users-list');
+        
+        if (mobileUsersList && originalUsersList) {
+            mobileUsersList.innerHTML = originalUsersList.innerHTML;
+            
+            // اضافه کردن event listener برای آیتم‌های کاربر در پنل موبایل
+            const userItems = mobileUsersList.querySelectorAll('.user-item');
+            userItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const usernameElement = this.querySelector('.user-username');
+                    if (usernameElement) {
+                        const username = usernameElement.textContent.replace('@', '');
                         const user = window.users.find(u => u.username === username);
                         if (user && window.selectUser) {
                             window.selectUser(user);
+                            closeMobilePanel(); // بستن پنل بعد از انتخاب کاربر
                         }
-                    });
+                    }
                 });
-            }
-        };
+            });
+        }
     }
-    
-    // فراخوانی اولیه برای پر کردن لیست
-    if (window.loadUsersList) {
-        window.loadUsersList();
-    }
+
+    // اولین بار لیست را پر کن
+    updateMobileUsersList();
 }
 
-// اضافه کردن به رویداد لود صفحه
+// اضافه کردن event listener برای لاگین کاربر
 document.addEventListener('DOMContentLoaded', function() {
-    initMobileUsersPanel();
+    // مشاهده تغییرات در نمایش chatContainer
+    const chatContainer = document.getElementById('chatContainer');
+    if (chatContainer) {
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+                    if (chatContainer.style.display === 'flex') {
+                        // کاربر لاگین کرده، پنل موبایل را فعال کن
+                        setTimeout(initMobileUsersPanel, 100);
+                    } else {
+                        // کاربر لاگین نکرده، پنل موبایل را پاک کن
+                        const mobilePanel = document.getElementById('mobileUsersPanel');
+                        const overlay = document.getElementById('mobileUsersOverlay');
+                        const menuBtn = document.getElementById('mobileMenuBtn');
+                        
+                        if (mobilePanel) mobilePanel.remove();
+                        if (overlay) overlay.remove();
+                        if (menuBtn) menuBtn.remove();
+                    }
+                }
+            });
+        });
+        
+        observer.observe(chatContainer, { attributes: true });
+    }
 });
 
-// همچنین برای زمانی که کاربر صفحه را می‌چرخاند
-window.addEventListener('resize', initMobileUsersPanel);
-window.addEventListener('orientationchange', initMobileUsersPanel);
+// همچنین برای تغییر سایز صفحه
+window.addEventListener('resize', function() {
+    if (document.getElementById('chatContainer') && 
+        document.getElementById('chatContainer').style.display === 'flex') {
+        initMobileUsersPanel();
+    }
+});
+
+window.addEventListener('orientationchange', function() {
+    setTimeout(function() {
+        if (document.getElementById('chatContainer') && 
+            document.getElementById('chatContainer').style.display === 'flex') {
+            initMobileUsersPanel();
+        }
+    }, 100);
+});
+
+
+async function loginUser(user) {
+    if (!user || !user.username) {
+        showError('خطا در اطلاعات کاربر');
+        return;
+    }
+    
+    currentUserData = user;
+    
+    if (!onlineUsers.includes(user.username)) {
+        onlineUsers.push(user.username);
+        localStorage.setItem('onlineUsers', JSON.stringify(onlineUsers));
+    }
+    
+    if (userProfiles[user.username]) {
+        userProfiles[user.username].lastSeen = new Date().toISOString();
+        localStorage.setItem('userProfiles', JSON.stringify(userProfiles));
+    }
+    
+    loadUserAvatar(user.username, userAvatar);
+    
+    authContainer.style.display = 'none';
+    chatContainer.style.display = 'flex';
+    messageInput.focus();
+    
+    updateLoginAttempts(user.username, true);
+    updateVerifiedDisplay();
+    loadUsersList();
+    loadProfileData();
+    
+    // فعال کردن پنل موبایل بعد از لاگین
+    setTimeout(initMobileUsersPanel, 100);
+}
 
 
     </script>
