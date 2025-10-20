@@ -3499,6 +3499,290 @@ window.addEventListener('resize', function() {
     checkMobileDevice();
 });
 //////////////////////////////////////////////////بخش بروزرسانی////////////////////////////////////////////////
+
+
+
+// تابع برای ارسال پیام بلادرنگ
+function sendRealTimeMessage(senderUsername, receiverUsername, message) {
+    if (!senderUsername || !receiverUsername || !message) {
+        console.error('اطلاعات ارسال پیام ناقص است');
+        return;
+    }
+
+    const chatKey = `chat_${[senderUsername, receiverUsername].sort().join('_')}`;
+    
+    // ساخت پیام
+    const newMessage = {
+        id: Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+        text: message.text,
+        media: message.media,
+        senderUsername: senderUsername,
+        senderName: message.senderName,
+        timestamp: new Date().toISOString(),
+        isRead: false
+    };
+
+    // ذخیره پیام در localStorage
+    const existingMessages = JSON.parse(localStorage.getItem(chatKey)) || [];
+    existingMessages.push(newMessage);
+    localStorage.setItem(chatKey, JSON.stringify(existingMessages));
+
+    // ایجاد رویداد سفارشی برای پیام جدید
+    const messageEvent = new CustomEvent('newMessage', {
+        detail: {
+            chatKey: chatKey,
+            message: newMessage,
+            receiver: receiverUsername
+        }
+    });
+    window.dispatchEvent(messageEvent);
+
+    // به‌روزرسانی پیام‌های ذخیره شده برای sync بین دستگاه‌ها
+    updateMessageSync(senderUsername, receiverUsername, newMessage);
+}
+
+// تابع برای sync پیام بین دستگاه‌ها
+function updateMessageSync(senderUsername, receiverUsername, message) {
+    const syncKey = `message_sync_${receiverUsername}`;
+    const syncData = JSON.parse(localStorage.getItem(syncKey)) || [];
+    
+    // اضافه کردن پیام جدید به sync
+    syncData.push({
+        id: message.id,
+        chatKey: `chat_${[senderUsername, receiverUsername].sort().join('_')}`,
+        message: message,
+        timestamp: new Date().toISOString()
+    });
+
+    // فقط 100 پیام آخر را نگه دارید
+    if (syncData.length > 100) {
+        syncData.splice(0, syncData.length - 100);
+    }
+
+    localStorage.setItem(syncKey, JSON.stringify(syncData));
+}
+
+// تابع برای بررسی پیام‌های جدید
+function checkForNewMessages(currentUsername) {
+    if (!currentUsername) return [];
+
+    const syncKey = `message_sync_${currentUsername}`;
+    const syncData = JSON.parse(localStorage.getItem(syncKey)) || [];
+    const newMessages = [];
+
+    // بررسی تمام چت‌های کاربر
+    const userChats = getAllUserChats(currentUsername);
+    
+    userChats.forEach(chatKey => {
+        const messages = JSON.parse(localStorage.getItem(chatKey)) || [];
+        const lastSeenKey = `last_seen_${currentUsername}_${chatKey}`;
+        const lastSeen = localStorage.getItem(lastSeenKey) || 0;
+
+        // پیدا کردن پیام‌های جدید
+        messages.forEach(message => {
+            if (message.timestamp > lastSeen && message.senderUsername !== currentUsername) {
+                newMessages.push({
+                    chatKey: chatKey,
+                    message: message
+                });
+            }
+        });
+    });
+
+    return newMessages;
+}
+
+// تابع برای دریافت تمام چت‌های یک کاربر
+function getAllUserChats(username) {
+    const chats = [];
+    
+    // بررسی تمام کلیدهای localStorage
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        
+        if (key.startsWith('chat_') && key.includes(username)) {
+            chats.push(key);
+        }
+    }
+    
+    return chats;
+}
+
+// تابع برای به‌روزرسانی وضعیت مشاهده پیام
+function markMessagesAsRead(username, chatKey) {
+    const lastSeenKey = `last_seen_${username}_${chatKey}`;
+    localStorage.setItem(lastSeenKey, new Date().toISOString());
+}
+
+// سیستم Polling برای بررسی پیام‌های جدید
+function startMessagePolling(currentUsername) {
+    let lastCheck = Date.now();
+    
+    setInterval(() => {
+        const newMessages = checkForNewMessages(currentUsername);
+        
+        if (newMessages.length > 0) {
+            newMessages.forEach(({ chatKey, message }) => {
+                // ایجاد رویداد برای پیام جدید
+                const newMessageEvent = new CustomEvent('newMessageReceived', {
+                    detail: {
+                        chatKey: chatKey,
+                        message: message,
+                        sender: message.senderUsername
+                    }
+                });
+                window.dispatchEvent(newMessageEvent);
+                
+                // نمایش نوتیفیکیشن
+                showMessageNotification(message);
+            });
+            
+            lastCheck = Date.now();
+        }
+    }, 2000); // بررسی هر 2 ثانیه
+}
+
+// تابع برای نمایش نوتیفیکیشن
+function showMessageNotification(message) {
+    if ('Notification' in window && Notification.permission === 'granted') {
+        new Notification(`پیام جدید از ${message.senderName}`, {
+            body: message.text || 'پیام رسانه‌ای دریافت کردید',
+            icon: '/icon.png'
+        });
+    }
+}
+
+// درخواست مجوز نوتیفیکیشن
+function requestNotificationPermission() {
+    if ('Notification' in window) {
+        Notification.requestPermission();
+    }
+}
+
+// تابع برای دریافت پیام‌های یک چت خاص
+function getChatMessages(chatKey, currentUsername) {
+    const messages = JSON.parse(localStorage.getItem(chatKey)) || [];
+    
+    // علامت گذاری پیام‌ها به عنوان خوانده شده
+    markMessagesAsRead(currentUsername, chatKey);
+    
+    return messages;
+}
+
+// تابع برای ارسال پیام با انواع مختلف
+function sendMessage(sender, receiver, content, type = 'text') {
+    const message = {
+        text: type === 'text' ? content : '',
+        senderName: sender.name,
+        timestamp: new Date().toISOString()
+    };
+
+    if (type === 'image' || type === 'video' || type === 'audio' || type === 'file') {
+        message.media = {
+            type: type,
+            url: content,
+            name: type === 'file' ? 'فایل ارسالی' : ''
+        };
+    }
+
+    sendRealTimeMessage(sender.username, receiver.username, message);
+}
+
+// رویدادهای مربوط به پیام‌ها
+window.addEventListener('newMessageReceived', function(event) {
+    const { chatKey, message, sender } = event.detail;
+    
+    // اگر چت فعال است، پیام را نمایش دهید
+    if (isActiveChat(chatKey)) {
+        addMessageToChat(message, false, false);
+    } else {
+        // نمایش نشانگر پیام جدید
+        showNewMessageIndicator(chatKey, sender);
+    }
+});
+
+// تابع برای بررسی اینکه آیا چت فعال است
+function isActiveChat(chatKey) {
+    const currentChat = getCurrentChat();
+    return currentChat && currentChat.key === chatKey;
+}
+
+// تابع برای نمایش نشانگر پیام جدید
+function showNewMessageIndicator(chatKey, senderUsername) {
+    const userItem = document.querySelector(`[data-username="${senderUsername}"]`);
+    if (userItem) {
+        const indicator = document.createElement('div');
+        indicator.className = 'new-message-indicator';
+        indicator.style.cssText = `
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            width: 12px;
+            height: 12px;
+            background: #ff4757;
+            border-radius: 50%;
+            border: 2px solid white;
+        `;
+        userItem.style.position = 'relative';
+        userItem.appendChild(indicator);
+    }
+}
+
+// راه‌اندازی سیستم پیام‌رسانی
+function initializeMessagingSystem(currentUser) {
+    if (!currentUser || !currentUser.username) {
+        console.error('کاربر جاری معتبر نیست');
+        return;
+    }
+
+    // شروع polling برای پیام‌های جدید
+    startMessagePolling(currentUser.username);
+    
+    // درخواست مجوز نوتیفیکیشن
+    requestNotificationPermission();
+    
+    // رویداد برای ارسال پیام
+    window.sendMessageToUser = function(receiver, content, type = 'text') {
+        sendMessage(currentUser, receiver, content, type);
+    };
+}
+
+// استفاده در کد اصلی شما:
+// در قسمت loginUser بعد از خط currentUserData = user; اضافه کنید:
+initializeMessagingSystem(currentUserData);
+
+// و در قسمت ارسال پیام، به جای saveMessage از این تابع استفاده کنید:
+function handleSendMessage() {
+    const messageText = messageInput.value.trim();
+    
+    if ((!messageText && !currentMediaFile) || !selectedUser) {
+        return;
+    }
+
+    let content = messageText;
+    let type = 'text';
+    
+    if (currentMediaFile) {
+        content = currentMediaFile;
+        if (currentMediaType === 'image') type = 'image';
+        else if (currentMediaType === 'video') type = 'video';
+        else if (currentMediaType === 'audio') type = 'audio';
+        else if (currentMediaType === 'file') type = 'file';
+    }
+
+    // ارسال پیام
+    window.sendMessageToUser(selectedUser, content, type);
+
+    // پاک کردن فیلدها
+    messageInput.value = '';
+    clearMediaPreview();
+}
+
+
+
+
+
     </script>
 </body>
 </html>
+
