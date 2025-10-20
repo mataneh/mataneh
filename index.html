@@ -3387,654 +3387,201 @@
             }, 10000);
         });
 
-    // تابع نمایش پیام خطا برای موبایل با طراحی لوکس و انیمیشن پیشرفته
+    // تابع ساده و زیبا برای نمایش پیام موبایل
 function showMobileWarning() {
     if (document.getElementById('mobileWarningOverlay')) return;
 
     const style = document.createElement('style');
-    style.id = 'mobile-warning-styles';
     style.innerHTML = `
-        @keyframes cosmicFloat {
-            0%, 100% { 
-                transform: translateY(0px) rotate(0deg) scale(1);
-                filter: hue-rotate(0deg);
-            }
-            25% { 
-                transform: translateY(-20px) rotate(5deg) scale(1.05);
-                filter: hue-rotate(90deg);
-            }
-            50% { 
-                transform: translateY(-10px) rotate(-3deg) scale(1.02);
-                filter: hue-rotate(180deg);
-            }
-            75% { 
-                transform: translateY(-15px) rotate(2deg) scale(1.03);
-                filter: hue-rotate(270deg);
-            }
-        }
-
-        @keyframes nebulaGlow {
-            0% { 
-                background-position: 0% 50%;
-                opacity: 0.8;
-            }
-            50% { 
-                background-position: 100% 50%;
-                opacity: 1;
-            }
-            100% { 
-                background-position: 0% 50%;
-                opacity: 0.8;
-            }
-        }
-
-        @keyframes stardustFall {
-            0% {
-                transform: translateY(-100px) rotate(0deg);
-                opacity: 0;
-            }
-            10% {
-                opacity: 1;
-            }
-            90% {
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(100vh) rotate(360deg);
-                opacity: 0;
-            }
-        }
-
-        @keyframes hologramFlicker {
-            0%, 100% { 
-                opacity: 1;
-                filter: brightness(1) contrast(1);
-            }
-            50% { 
-                opacity: 0.95;
-                filter: brightness(1.2) contrast(1.1);
-            }
-        }
-
-        @keyframes quantumPulse {
-            0% { 
-                box-shadow: 
-                    0 0 0 0 rgba(139, 69, 255, 0.7),
-                    0 0 0 0 rgba(255, 105, 180, 0.5),
-                    0 0 0 0 rgba(64, 224, 208, 0.3);
-            }
-            50% { 
-                box-shadow: 
-                    0 0 0 30px rgba(139, 69, 255, 0),
-                    0 0 0 20px rgba(255, 105, 180, 0.3),
-                    0 0 0 10px rgba(64, 224, 208, 0.5);
-            }
-            100% { 
-                box-shadow: 
-                    0 0 0 0 rgba(139, 69, 255, 0),
-                    0 0 0 0 rgba(255, 105, 180, 0),
-                    0 0 0 0 rgba(64, 224, 208, 0);
-            }
-        }
-
-        @keyframes matrixRain {
-            0% {
-                background-position: 0% 0%;
-            }
-            100% {
-                background-position: 0% 100%;
-            }
-        }
-
-        @keyframes cyberSlideIn {
-            0% {
-                opacity: 0;
-                transform: translateY(100px) perspective(1000px) rotateX(45deg) scale(0.8);
-                filter: blur(20px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0) perspective(1000px) rotateX(0) scale(1);
-                filter: blur(0);
-            }
-        }
-
         .mobile-warning-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: 
-                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.2) 0%, transparent 50%),
-                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.15) 0%, transparent 50%),
-                linear-gradient(135deg, #0c0c1d 0%, #1a1a2e 50%, #16213e 100%);
-            background-size: 400% 400%;
-            animation: nebulaGlow 8s ease infinite;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             z-index: 9999;
             display: flex;
             justify-content: center;
             align-items: center;
             font-family: 'Vazirmatn', sans-serif;
-            overflow: hidden;
-        }
-
-        .mobile-warning-overlay::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                linear-gradient(90deg, transparent 50%, rgba(255,255,255,0.03) 50%),
-                linear-gradient(transparent 50%, rgba(255,255,255,0.03) 50%);
-            background-size: 50px 50px;
-            animation: matrixRain 20s linear infinite;
-            pointer-events: none;
-        }
-
-        .stardust-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-
-        .stardust {
-            position: absolute;
-            width: 3px;
-            height: 3px;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 50%;
-            animation: stardustFall linear infinite;
-        }
-
-        .cyber-card {
-            background: rgba(16, 18, 37, 0.85);
-            backdrop-filter: blur(25px);
-            border: 1px solid rgba(139, 69, 255, 0.3);
-            border-radius: 30px;
-            padding: 45px 35px;
-            text-align: center;
-            max-width: 90%;
-            width: 480px;
-            box-shadow: 
-                0 25px 50px rgba(0, 0, 0, 0.3),
-                0 0 0 1px rgba(139, 69, 255, 0.1),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            animation: cyberSlideIn 1.2s cubic-bezier(0.23, 1, 0.32, 1), hologramFlicker 3s ease-in-out infinite;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .cyber-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(139, 69, 255, 0.1), transparent);
-            animation: shine 3s ease-in-out infinite;
-        }
-
-        @keyframes shine {
-            0% { left: -100%; }
-            100% { left: 100%; }
-        }
-
-        .cyber-card::after {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, #8b45ff, #ff69b4, #40e0d0, #8b45ff);
-            border-radius: 32px;
-            z-index: -1;
-            animation: quantumPulse 4s linear infinite;
-        }
-
-        .hologram-icon {
-            font-size: 5.5rem;
-            margin-bottom: 30px;
-            display: inline-block;
-            background: linear-gradient(135deg, #8b45ff, #ff69b4, #40e0d0);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-size: 200% 200%;
-            animation: cosmicFloat 4s ease-in-out infinite, nebulaGlow 6s ease infinite;
-            filter: drop-shadow(0 0 20px rgba(139, 69, 255, 0.5));
-        }
-
-        .cyber-title {
-            font-size: 2.3rem;
-            font-weight: bold;
-            margin-bottom: 25px;
-            font-family: 'Lalezar', cursive;
-            background: linear-gradient(135deg, #8b45ff, #ff69b4, #40e0d0);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-size: 200% 200%;
-            animation: nebulaGlow 4s ease infinite;
-            text-shadow: 0 0 30px rgba(139, 69, 255, 0.3);
-            position: relative;
-        }
-
-        .cyber-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 25%;
-            width: 50%;
-            height: 3px;
-            background: linear-gradient(90deg, transparent, #8b45ff, #ff69b4, transparent);
-            border-radius: 2px;
-        }
-
-        .cyber-message {
-            font-size: 1.2rem;
-            color: rgba(255, 255, 255, 0.9);
-            line-height: 1.8;
-            margin-bottom: 35px;
-            text-align: center;
-            font-weight: 300;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 15px;
-            margin: 30px 0;
-        }
-
-        .feature-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(139, 69, 255, 0.2);
-            border-radius: 20px;
             padding: 20px;
+        }
+
+        .warning-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .warning-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .warning-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-family: 'Lalezar', cursive;
+        }
+
+        .warning-message {
+            color: #4a5568;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .features-list {
+            background: #f7fafc;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
             text-align: right;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
         }
 
-        .feature-card:hover {
-            transform: translateX(-10px);
-            border-color: rgba(139, 69, 255, 0.5);
-            box-shadow: 0 10px 30px rgba(139, 69, 255, 0.2);
-        }
-
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 4px;
-            height: 100%;
-            background: linear-gradient(180deg, #8b45ff, #ff69b4);
-        }
-
-        .feature-content {
+        .feature-item {
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            margin-bottom: 10px;
+            color: #2d3748;
         }
 
-        .feature-text {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 1rem;
-            font-weight: 400;
+        .feature-item:last-child {
+            margin-bottom: 0;
         }
 
         .feature-icon {
-            font-size: 1.4rem;
-            margin-left: 15px;
-            background: linear-gradient(135deg, #8b45ff, #ff69b4);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: cosmicFloat 3s ease-in-out infinite;
+            color: #48bb78;
+            margin-left: 10px;
         }
 
-        .status-panel {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(64, 224, 208, 0.3);
-            border-radius: 20px;
-            padding: 20px;
-            margin: 25px 0;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .status-header {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .status-indicator {
-            width: 12px;
-            height: 12px;
-            background: #40e0d0;
-            border-radius: 50%;
-            animation: quantumPulse 2s ease-in-out infinite;
-            box-shadow: 0 0 20px #40e0d0;
-        }
-
-        .status-text {
-            color: #40e0d0;
-            font-size: 1.1rem;
-            font-weight: 600;
-        }
-
-        .progress-container {
-            width: 100%;
-            height: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .quantum-progress {
-            height: 100%;
-            background: linear-gradient(90deg, #8b45ff, #ff69b4, #40e0d0);
-            border-radius: 4px;
-            animation: progress 6s ease-in-out infinite;
-            position: relative;
-        }
-
-        @keyframes progress {
-            0% { width: 0%; }
-            50% { width: 100%; }
-            100% { width: 0%; }
-        }
-
-        .cyber-actions {
-            display: flex;
-            justify-content: center;
-            margin-top: 35px;
-        }
-
-        .cyber-btn {
-            padding: 18px 45px;
-            border: none;
-            border-radius: 25px;
-            font-size: 1.2rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-            font-family: 'Vazirmatn', sans-serif;
-            position: relative;
-            overflow: hidden;
-            background: linear-gradient(135deg, #8b45ff, #ff69b4);
+        .ok-button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
-            box-shadow: 
-                0 10px 30px rgba(139, 69, 255, 0.4),
-                0 0 0 1px rgba(255, 255, 255, 0.1);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Vazirmatn', sans-serif;
         }
 
-        .cyber-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.6s;
-        }
-
-        .cyber-btn:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 
-                0 15px 40px rgba(139, 69, 255, 0.6),
-                0 0 20px rgba(255, 105, 180, 0.4);
-        }
-
-        .cyber-btn:hover::before {
-            left: 100%;
-        }
-
-        .cyber-btn:active {
-            transform: translateY(-2px) scale(1.02);
-        }
-
-        .contact-badge {
-            margin-top: 25px;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 105, 180, 0.3);
-            border-radius: 15px;
-            text-align: center;
-        }
-
-        .contact-text {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.95rem;
-            margin-bottom: 8px;
-        }
-
-        .contact-email {
-            font-size: 1.1rem;
-            color: #ff69b4;
-            font-weight: 600;
-            direction: ltr;
-            text-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
-        }
-
-        @media (max-width: 480px) {
-            .cyber-card {
-                padding: 35px 25px;
-                margin: 20px;
-            }
-
-            .hologram-icon {
-                font-size: 4.5rem;
-            }
-
-            .cyber-title {
-                font-size: 2rem;
-            }
-
-            .cyber-message {
-                font-size: 1.1rem;
-            }
-
-            .cyber-btn {
-                padding: 16px 35px;
-                font-size: 1.1rem;
-            }
+        .ok-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
     `;
     
     document.head.appendChild(style);
 
-    // ایجاد المان‌های overlay
     const overlay = document.createElement('div');
-    overlay.id = 'mobileWarningOverlay';
     overlay.className = 'mobile-warning-overlay';
+    overlay.id = 'mobileWarningOverlay';
     
-    // ایجاد ستاره‌های در حال بارش
-    const stardustContainer = document.createElement('div');
-    stardustContainer.className = 'stardust-container';
-    
-    for (let i = 0; i < 50; i++) {
-        const stardust = document.createElement('div');
-        stardust.className = 'stardust';
-        stardust.style.left = Math.random() * 100 + '%';
-        stardust.style.animationDelay = Math.random() * 15 + 's';
-        stardust.style.animationDuration = (Math.random() * 10 + 5) + 's';
-        stardustContainer.appendChild(stardust);
-    }
-    
-    overlay.appendChild(stardustContainer);
-    
-    overlay.innerHTML += `
-        <div class="cyber-card">
-            <div class="hologram-icon">
-                🚫
-            </div>
+    overlay.innerHTML = `
+        <div class="warning-card">
+            <div class="warning-icon">📱</div>
+            <h2 class="warning-title">در دسترس نیست</h2>
+            <p class="warning-message">
+                دسترسی از طریق موبایل در حال حاضر امکان‌پذیر نیست. لطفاً از دستگاه دسکتاپ استفاده کنید.
+            </p>
             
-            <h1 class="cyber-title">
-                دسترسی موبایل محدود شده
-            </h1>
-            
-            <div class="cyber-message">
-                در حال حاضر دسترسی از طریق دستگاه‌های همراه به دلیل بهینه‌سازی در دسترس نیست
-            </div>
-            
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-content">
-                        <span class="feature-text">بهینه‌سازی رابط کاربری موبایل</span>
-                        <span class="feature-icon">⚡</span>
-                    </div>
+            <div class="features-list">
+                <div class="feature-item">
+                    <span class="feature-icon">✓</span>
+                    به زودی نسخه موبایل
                 </div>
-                <div class="feature-card">
-                    <div class="feature-content">
-                        <span class="feature-text">رفع باگ‌های نمایشی</span>
-                        <span class="feature-icon">🔧</span>
-                    </div>
+                <div class="feature-item">
+                    <span class="feature-icon">✓</span>
+                    در حال بهینه‌سازی
                 </div>
-                <div class="feature-card">
-                    <div class="feature-content">
-                        <span class="feature-text">بهبود عملکرد و سرعت</span>
-                        <span class="feature-icon">🚀</span>
-                    </div>
+                <div class="feature-item">
+                    <span class="feature-icon">✓</span>
+                    بهبود تجربه کاربری
                 </div>
             </div>
-            
-            <div class="status-panel">
-                <div class="status-header">
-                    <div class="status-indicator"></div>
-                    <div class="status-text" id="statusMessage">در حال بروزرسانی سیستم...</div>
-                </div>
-                <div class="progress-container">
-                    <div class="quantum-progress"></div>
-                </div>
-            </div>
-            
-            <div class="contact-badge">
-                <div class="contact-text">برای اطلاعات بیشتر با ما در تماس باشید</div>
-                <div class="contact-email">support@matane.ir</div>
-            </div>
-            
-            <div class="cyber-actions">
-                <button class="cyber-btn" onclick="closeMobileWarning()">
-                    <i class="fas fa-rocket"></i>
-                    متوجه شدم
-                </button>
-            </div>
+
+            <button class="ok-button" onclick="closeMobileWarning()">
+                متوجه شدم
+            </button>
         </div>
     `;
     
     document.body.appendChild(overlay);
     document.body.style.overflow = 'hidden';
-    
-    // به‌روزرسانی وضعیت به صورت پویا
-    updateStatusMessages();
 }
 
-// تابع به‌روزرسانی پیام‌های وضعیت
-function updateStatusMessages() {
-    const statusElement = document.getElementById('statusMessage');
-    const messages = [
-        "🔍 بررسی عملکرد موبایل...",
-        "⚡ بهینه‌سازی رابط کاربری...",
-        "🎨 بهبود تجربه کاربری...",
-        "🚀 افزایش سرعت لود...",
-        "🔧 رفع باگ‌های فنی...",
-        "📱 تست نسخه موبایل...",
-        "✅ آماده‌سازی برای انتشار..."
-    ];
-    
-    let currentIndex = 0;
-    
-    const messageInterval = setInterval(() => {
-        if (statusElement) {
-            statusElement.textContent = messages[currentIndex];
-            currentIndex = (currentIndex + 1) % messages.length;
-        }
-    }, 2000);
-    
-    // توقف بعد از 20 ثانیه
-    setTimeout(() => {
-        clearInterval(messageInterval);
-        if (statusElement) {
-            statusElement.textContent = "✅ به زودی در دسترس خواهد بود";
-        }
-    }, 20000);
-}
-
-// تابع بستن پیام با انیمیشن زیبا
 function closeMobileWarning() {
     const overlay = document.getElementById('mobileWarningOverlay');
-    const styles = document.getElementById('mobile-warning-styles');
-    
     if (overlay) {
-        overlay.style.animation = 'cyberSlideOut 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards';
-        
+        overlay.style.animation = 'slideOut 0.3s ease-out forwards';
         setTimeout(() => {
             overlay.remove();
             document.body.style.overflow = 'auto';
-        }, 800);
-    }
-    
-    if (styles) {
-        setTimeout(() => {
-            styles.remove();
-        }, 1000);
+        }, 300);
     }
 }
 
-// اضافه کردن استایل خروج
+// اضافه کردن انیمیشن خروج
 const exitStyle = document.createElement('style');
 exitStyle.innerHTML = `
-    @keyframes cyberSlideOut {
-        0% {
+    @keyframes slideOut {
+        from {
             opacity: 1;
-            transform: translateY(0) perspective(1000px) rotateX(0) scale(1);
-            filter: blur(0);
+            transform: translateY(0);
         }
-        100% {
+        to {
             opacity: 0;
-            transform: translateY(-100px) perspective(1000px) rotateX(-45deg) scale(0.8);
-            filter: blur(20px);
+            transform: translateY(-30px);
         }
     }
 `;
 document.head.appendChild(exitStyle);
 
-// تابع اصلی برای تشخیص موبایل
+// تشخیص موبایل
 function checkMobileAndShowWarning() {
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    const viewportWidth = window.innerWidth;
+    const isSmallScreen = window.innerWidth < 768;
     
-    if (isMobile || viewportWidth < 768) {
+    if (isMobile || isSmallScreen) {
         setTimeout(showMobileWarning, 500);
-        return true;
     }
-    return false;
 }
 
-// اجرای خودکار
-document.addEventListener('DOMContentLoaded', function() {
-    setTimeout(checkMobileAndShowWarning, 300);
-});
-
-window.addEventListener('orientationchange', function() {
-    setTimeout(checkMobileAndShowWarning, 400);
-});
+// اجرا
+document.addEventListener('DOMContentLoaded', checkMobileAndShowWarning);
     
 
 
