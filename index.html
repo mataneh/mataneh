@@ -1,0 +1,3391 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پیامرسان متانه</title>
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css2?family=Lalezar&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            font-family: 'Vazirmatn', sans-serif;
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 400px;
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            padding: 30px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
+            font-family: 'Lalezar', cursive;
+            color: #333;
+        }
+
+        .auth-header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #4776E6 0%, #8E54E9 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-weight: 500;
+            color: #555;
+        }
+
+        .form-group input {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: 'Vazirmatn', sans-serif;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus {
+            border-color: #8E54E9;
+            box-shadow: 0 0 0 2px rgba(142, 84, 233, 0.2);
+            outline: none;
+        }
+
+        .auth-button {
+            background: linear-gradient(90deg, #4776E6 0%, #8E54E9 100%);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+            font-family: 'Vazirmatn', sans-serif;
+        }
+
+        .auth-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(142, 84, 233, 0.4);
+        }
+
+        .auth-button:active {
+            transform: translateY(0);
+        }
+
+        .auth-switch {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+        }
+
+        .auth-switch a {
+            color: #4776E6;
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .auth-switch a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.9rem;
+            text-align: center;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .chat-container {
+            width: 100%;
+            max-width: 900px;
+            height: 650px;
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            display: flex;
+            overflow: hidden;
+            display: none;
+            animation: slideIn 0.5s ease-in-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .users-panel {
+            width: 280px;
+            background: #f8f9fa;
+            border-left: 1px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .users-header {
+            padding: 15px;
+            background: white;
+            border-bottom: 1px solid #e0e0e0;
+            font-weight: bold;
+            color: #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .users-tabs {
+            display: flex;
+            background: white;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .users-tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .users-tab.active {
+            border-bottom-color: #4776E6;
+            color: #4776E6;
+            font-weight: bold;
+        }
+
+        .users-search {
+            padding: 10px 15px;
+            background: white;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-family: 'Vazirmatn', sans-serif;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: #8E54E9;
+        }
+
+        .users-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .user-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 8px;
+            border: 1px solid transparent;
+        }
+
+        .user-item:hover {
+            background: #e9ecef;
+            transform: translateX(-5px);
+        }
+
+        .user-item.active {
+            background: #e3f2fd;
+            border-color: #4776E6;
+            box-shadow: 0 2px 8px rgba(71, 118, 230, 0.2);
+        }
+
+        .user-avatar-small {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4776E6 0%, #8E54E9 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1rem;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            margin-left: 12px;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+
+        .user-status {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+
+        .user-status.online {
+            background: #4CAF50;
+        }
+
+        .user-status.offline {
+            background: #9E9E9E;
+        }
+
+        .user-info-small {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .user-name {
+            font-weight: bold;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 3px;
+        }
+
+        .user-username {
+            font-size: 0.8rem;
+            color: #666;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .chat-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            background: linear-gradient(90deg, #4776E6 0%, #8E54E9 100%);
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: bold;
+            font-family: 'Lalezar', cursive;
+            letter-spacing: 0.5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .current-chat-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .current-chat-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background-size: cover;
+            background-position: center;
+            cursor: pointer;
+        }
+
+        .current-chat-details {
+            text-align: right;
+        }
+
+        .current-chat-name {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .current-chat-status {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        .user-info {
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .avatar-container {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4776E6 0%, #8E54E9 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+            border: 2px solid white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .avatar:hover {
+            transform: scale(1.1);
+        }
+
+        .verified-badge {
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, #1DA1F2 0%, #0d8bd9 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+            border: 2px solid white;
+            box-shadow: 0 2px 8px rgba(29, 161, 242, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .verified-badge:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(29, 161, 242, 0.6);
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+            font-family: 'Vazirmatn', sans-serif;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background-color: #f8f9fa;
+        }
+
+        .message-container {
+            display: flex;
+            align-items: flex-end;
+            gap: 10px;
+            max-width: 100%;
+        }
+
+        .message-container.sent {
+            flex-direction: row-reverse;
+            align-self: flex-end;
+        }
+
+        .message-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4776E6 0%, #8E54E9 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+            border: 2px solid white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: relative;
+            background-size: cover;
+            background-position: center;
+            cursor: pointer;
+        }
+
+        .message-avatar.verified::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            width: 14px;
+            height: 14px;
+            background: linear-gradient(135deg, #1DA1F2 0%, #0d8bd9 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 8px;
+            font-weight: bold;
+            border: 2px solid white;
+            box-shadow: 0 1px 4px rgba(29, 161, 242, 0.4);
+        }
+
+        .message-avatar.verified::before {
+            content: '✓';
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            width: 14px;
+            height: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 8px;
+            font-weight: bold;
+            z-index: 2;
+        }
+
+        .message {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            animation: messageAppear 0.3s ease-out;
+        }
+
+        @keyframes messageAppear {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .received .message {
+            background-color: white;
+            border-bottom-right-radius: 5px;
+            color: #333;
+            border: 1px solid #e0e0e0;
+        }
+
+        .sent .message {
+            background: linear-gradient(90deg, #4776E6 0%, #8E54E9 100%);
+            color: white;
+            border-bottom-left-radius: 5px;
+        }
+
+        .message-content {
+            word-wrap: break-word;
+        }
+
+        .message-media {
+            max-width: 100%;
+            border-radius: 12px;
+            margin-top: 8px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .message-media:hover {
+            transform: scale(1.02);
+        }
+
+        .message-audio {
+            width: 250px;
+            background: #f0f0f0;
+            border-radius: 20px;
+            padding: 10px 15px;
+            margin-top: 8px;
+        }
+
+        .audio-player {
+            width: 100%;
+            height: 30px;
+        }
+
+        .message-file {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            padding: 10px 15px;
+            margin-top: 8px;
+            max-width: 300px;
+        }
+
+        .file-icon {
+            font-size: 1.5rem;
+            color: #4776E6;
+        }
+
+        .file-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .file-name {
+            font-weight: bold;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .file-size {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .download-btn {
+            background: #4776E6;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .message-actions {
+            position: absolute;
+            top: -30px;
+            right: 0;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            display: none;
+            padding: 5px;
+            gap: 5px;
+        }
+
+        .message:hover .message-actions {
+            display: flex;
+        }
+
+        .message-action {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 6px;
+            color: #666;
+            font-size: 0.8rem;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .message-action:hover {
+            background: #f0f0f0;
+            color: #4776E6;
+        }
+
+        .message-sender {
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 4px;
+            color: #8E54E9;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .verified-text {
+            color: #1DA1F2;
+            font-size: 0.7rem;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .verified-badge-telegram {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 16px;
+            height: 16px;
+            background: #1DA1F2;
+            border-radius: 50%;
+            margin-right: 4px;
+        }
+
+        .verified-badge-telegram i {
+            color: white;
+            font-size: 10px;
+        }
+
+        .message-time {
+            font-size: 0.75rem;
+            opacity: 0.7;
+            margin-top: 6px;
+            text-align: left;
+            font-family: 'Vazirmatn', sans-serif;
+        }
+
+        .chat-input {
+            display: flex;
+            padding: 20px;
+            border-top: 1px solid #eee;
+            background-color: white;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        .chat-input-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .media-preview {
+            display: none;
+            position: relative;
+            max-width: 200px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .media-preview img, .media-preview video {
+            width: 100%;
+            max-height: 150px;
+            object-fit: cover;
+        }
+
+        .remove-preview {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 12px 18px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            outline: none;
+            font-size: 0.95rem;
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: #f8f9fa;
+            transition: all 0.3s;
+        }
+
+        .chat-input input:focus {
+            border-color: #8E54E9;
+            box-shadow: 0 0 0 2px rgba(142, 84, 233, 0.2);
+        }
+
+        .chat-input-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .media-btn {
+            background: none;
+            border: none;
+            color: #8E54E9;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 50%;
+            transition: all 0.3s;
+            font-size: 1.2rem;
+        }
+
+        .media-btn:hover {
+            background: #f0f0f0;
+            transform: scale(1.1);
+        }
+
+        .chat-input button {
+            background: linear-gradient(90deg, #4776E6 0%, #8E54E9 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 12px rgba(142, 84, 233, 0.3);
+        }
+
+        .chat-input button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(142, 84, 233, 0.4);
+        }
+
+        .chat-input button:active {
+            transform: translateY(0);
+        }
+
+        .welcome-message {
+            text-align: center;
+            color: #666;
+            padding: 40px 20px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .welcome-message i {
+            font-size: 3rem;
+            color: #8E54E9;
+            margin-bottom: 15px;
+            opacity: 0.7;
+        }
+
+        .profile-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .profile-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            width: 90%;
+            max-width: 450px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            animation: modalAppear 0.3s ease-out;
+        }
+
+        @keyframes modalAppear {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .profile-avatar-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 25px;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4776E6 0%, #8E54E9 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 2.8rem;
+            border: 4px solid white;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            background-size: cover;
+            background-position: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 0 auto;
+        }
+
+        .profile-avatar:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+
+        .profile-avatar.verified::after {
+            content: '';
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #1DA1F2 0%, #0d8bd9 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid white;
+            box-shadow: 0 3px 10px rgba(29, 161, 242, 0.4);
+        }
+
+        .profile-avatar.verified::before {
+            content: '✓';
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            z-index: 2;
+        }
+
+        .change-avatar-btn {
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(90deg, #4776E6 0%, #8E54E9 100%);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 3px 10px rgba(71, 118, 230, 0.3);
+            transition: all 0.3s;
+        }
+
+        .change-avatar-btn:hover {
+            transform: translateX(-50%) translateY(-2px);
+            box-shadow: 0 5px 15px rgba(71, 118, 230, 0.4);
+        }
+
+        .remove-avatar-btn {
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 6px 12px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 0 3px 10px rgba(231, 76, 60, 0.3);
+            transition: all 0.3s;
+        }
+
+        .remove-avatar-btn:hover {
+            transform: translateX(-50%) translateY(-2px);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+        }
+
+        .profile-name {
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+            font-family: 'Lalezar', cursive;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .profile-username {
+            color: #777;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .profile-bio {
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .profile-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .profile-btn {
+            padding: 14px 20px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-family: 'Vazirmatn', sans-serif;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 0.95rem;
+        }
+
+        .profile-btn.primary {
+            background: linear-gradient(90deg, #4776E6 0%, #8E54E9 100%);
+            color: white;
+        }
+
+        .profile-btn.secondary {
+            background: #f0f0f0;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+        .profile-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .edit-profile-form {
+            display: none;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+            text-align: right;
+        }
+
+        .edit-profile-form .form-group {
+            gap: 5px;
+        }
+
+        .edit-profile-form label {
+            font-weight: 500;
+            color: #555;
+            font-size: 0.9rem;
+        }
+
+        .edit-profile-form input, .edit-profile-form textarea {
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-family: 'Vazirmatn', sans-serif;
+            transition: all 0.3s;
+            width: 100%;
+        }
+
+        .edit-profile-form textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .edit-profile-form input:focus, .edit-profile-form textarea:focus {
+            border-color: #8E54E9;
+            box-shadow: 0 0 0 2px rgba(142, 84, 233, 0.2);
+            outline: none;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .form-actions button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Vazirmatn', sans-serif;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .form-actions .save-btn {
+            background: #2ecc71;
+            color: white;
+        }
+
+        .form-actions .cancel-btn {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .form-actions button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+
+        .avatar-crop-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1002;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .avatar-crop-content {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .avatar-crop-header {
+            margin-bottom: 20px;
+            font-family: 'Lalezar', cursive;
+            color: #333;
+            font-size: 1.4rem;
+        }
+
+        .avatar-crop-preview {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin: 0 auto 20px;
+            border: 3px solid #8E54E9;
+            position: relative;
+        }
+
+        .avatar-crop-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .crop-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .zoom-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .zoom-control label {
+            font-weight: 500;
+            color: #555;
+            min-width: 60px;
+        }
+
+        .zoom-control input {
+            flex: 1;
+        }
+
+        .position-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .position-btn {
+            width: 40px;
+            height: 40px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .position-btn:hover {
+            background: #f0f0f0;
+            border-color: #8E54E9;
+        }
+
+        .crop-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .crop-actions button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Vazirmatn', sans-serif;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .crop-actions .crop-save-btn {
+            background: linear-gradient(90deg, #4776E6 0%, #8E54E9 100%);
+            color: white;
+        }
+
+        .crop-actions .crop-cancel-btn {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .crop-actions button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .media-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 1003;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .media-modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .media-modal-content img, .media-modal-content video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .close-media-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .admin-panel {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1001;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .admin-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            animation: modalAppear 0.3s ease-out;
+        }
+
+        .admin-header {
+            text-align: center;
+            margin-bottom: 25px;
+            font-family: 'Lalezar', cursive;
+            color: #333;
+        }
+
+        .admin-header h2 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #4776E6 0%, #8E54E9 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .admin-section {
+            margin-bottom: 25px;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            background: #f8f9fa;
+        }
+
+        .admin-section h3 {
+            margin-bottom: 15px;
+            color: #4776E6;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .admin-user-list {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: white;
+            padding: 10px;
+        }
+
+        .admin-user-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .admin-user-item:last-child {
+            border-bottom: none;
+        }
+
+        .admin-user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .admin-user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4776E6 0%, #8E54E9 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+
+        .admin-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .admin-action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-family: 'Vazirmatn', sans-serif;
+            transition: all 0.2s;
+        }
+
+        .admin-action-btn.ban {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .admin-action-btn.unban {
+            background: #2ecc71;
+            color: white;
+        }
+
+        .admin-action-btn.verify {
+            background: #1DA1F2;
+            color: white;
+        }
+
+        .admin-action-btn.mute {
+            background: #f39c12;
+            color: white;
+        }
+
+        .admin-action-btn.unmute {
+            background: #9b59b6;
+            color: white;
+        }
+
+        .admin-action-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .admin-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #4776E6;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .chat-messages::-webkit-scrollbar,
+        .users-list::-webkit-scrollbar,
+        .admin-user-list::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track,
+        .users-list::-webkit-scrollbar-track,
+        .admin-user-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb,
+        .users-list::-webkit-scrollbar-thumb,
+        .admin-user-list::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 10px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb:hover,
+        .users-list::-webkit-scrollbar-thumb:hover,
+        .admin-user-list::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+
+        @media (max-width: 768px) {
+            .chat-container {
+                max-width: 100%;
+                height: 100%;
+                border-radius: 0;
+            }
+            
+            .users-panel {
+                display: none;
+            }
+            
+            body {
+                padding: 0;
+            }
+            
+            .auth-container {
+                border-radius: 0;
+                height: 100%;
+                justify-content: center;
+            }
+            
+            .admin-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-actions, .crop-actions {
+                flex-direction: column;
+            }
+            
+            .chat-input-actions {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container" id="authContainer">
+        <div class="auth-header">
+            <h1>پیامرسان متانه</h1>
+            <p id="authTitle">ورود به حساب کاربری</p>
+        </div>
+        
+        <form class="auth-form" id="authForm">
+            <div class="form-group" id="nameField" style="display: none;">
+                <label for="name">نام کامل</label>
+                <input type="text" id="name" placeholder="نام خود را وارد کنید">
+            </div>
+            
+            <div class="form-group">
+                <label for="username">نام کاربری</label>
+                <input type="text" id="username" placeholder="نام کاربری خود را وارد کنید">
+            </div>
+            
+            <div class="form-group">
+                <label for="password">کلمه عبور</label>
+                <input type="password" id="password" placeholder="کلمه عبور خود را وارد کنید">
+            </div>
+            
+            <button type="submit" class="auth-button" id="authButton">ورود</button>
+            
+            <div class="error-message" id="errorMessage">خطا در ورود، لطفا دوباره تلاش کنید</div>
+        </form>
+        
+        <div class="auth-switch">
+            <span id="switchText">حساب کاربری ندارید؟</span>
+            <a id="switchLink">ثبت نام</a>
+        </div>
+    </div>
+    
+    <div class="chat-container" id="chatContainer">
+        <div class="chat-main">
+            <div class="chat-header">
+                <div class="current-chat-info" id="currentChatInfo" style="display: none;">
+                    <div class="current-chat-avatar" id="currentChatAvatar">م</div>
+                    <div class="current-chat-details">
+                        <div class="current-chat-name" id="currentChatName">نام کاربر</div>
+                        <div class="current-chat-status" id="currentChatStatus">آنلاین</div>
+                    </div>
+                </div>
+                <span id="chatTitle" style="flex: 1; text-align: center;">پیامرسان متانه</span>
+                <div class="user-info">
+                    <div class="avatar-container" id="headerAvatar">
+                        <div class="avatar" id="userAvatar">م</div>
+                        <div class="verified-badge" id="verifiedBadge" style="display: none;">
+                            <i class="fas fa-check"></i>
+                        </div>
+                    </div>
+                    <button class="logout-btn" id="logoutButton">
+                        <i class="fas fa-sign-out-alt"></i>
+                        خروج
+                    </button>
+                </div>
+            </div>
+            
+            <div class="chat-messages" id="chatMessages">
+                <div class="welcome-message">
+                    <i class="fas fa-comments"></i>
+                    <h3>به پیامرسان متانه خوش آمدید</h3>
+                    <p>برای شروع گفتگو، کاربری را از لیست سمت راست انتخاب کنید</p>
+                </div>
+            </div>
+            
+            <div class="chat-input">
+                <div class="chat-input-container">
+                    <div class="media-preview" id="mediaPreview">
+                        <img id="previewImage" src="" alt="Preview">
+                        <video id="previewVideo" controls style="display: none;"></video>
+                        <button class="remove-preview" id="removePreview">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <input type="text" id="messageInput" placeholder="پیام خود را بنویسید...">
+                </div>
+                <div class="chat-input-actions">
+                    <input type="file" id="imageUpload" accept="image/*" style="display: none;">
+                    <input type="file" id="videoUpload" accept="video/*" style="display: none;">
+                    <input type="file" id="fileUpload" style="display: none;">
+                    <input type="file" id="audioUpload" accept="audio/*" style="display: none;">
+                    
+                    <button class="media-btn" id="imageBtn" title="ارسال عکس">
+                        <i class="fas fa-image"></i>
+                    </button>
+                    <button class="media-btn" id="videoBtn" title="ارسال ویدیو">
+                        <i class="fas fa-video"></i>
+                    </button>
+                    <button class="media-btn" id="audioBtn" title="ارسال صوت">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                    <button class="media-btn" id="fileBtn" title="ارسال فایل">
+                        <i class="fas fa-paperclip"></i>
+                    </button>
+                </div>
+                <button id="sendButton">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div class="users-panel">
+            <div class="users-header">
+                <span>کاربران</span>
+                <span id="onlineCount">0 آنلاین</span>
+            </div>
+            
+            <div class="users-tabs">
+                <div class="users-tab active" data-tab="online">آنلاین</div>
+                <div class="users-tab" data-tab="all">همه</div>
+                <div class="users-tab" data-tab="saved">ذخیره شده</div>
+            </div>
+            
+            <div class="users-search">
+                <input type="text" class="search-input" id="userSearch" placeholder="جستجوی کاربران...">
+            </div>
+            
+            <div class="users-list" id="usersList">
+            </div>
+        </div>
+    </div>
+
+    <div class="profile-modal" id="profileModal">
+        <div class="profile-content">
+            <div class="profile-avatar-container">
+                <div class="profile-avatar" id="profileAvatar">م</div>
+                <button class="change-avatar-btn" id="changeAvatarBtn">
+                    <i class="fas fa-camera"></i>
+                    تغییر عکس پروفایل
+                </button>
+                <button class="remove-avatar-btn" id="removeAvatarBtn">
+                    <i class="fas fa-trash"></i>
+                    حذف عکس
+                </button>
+                <input type="file" id="avatarUpload" accept="image/*" style="display: none;">
+            </div>
+            <div class="profile-name" id="profileName">
+                نام کاربر
+                <span class="verified-text" id="profileVerifiedBadge" style="display: none;">
+                    <span class="verified-badge-telegram">
+                        <i class="fas fa-check"></i>
+                    </span>
+                </span>
+            </div>
+            <div class="profile-username" id="profileUsername">@username</div>
+            <div class="profile-bio" id="profileBio">بیوگرافی کاربر نمایش داده می‌شود</div>
+            
+            <div class="edit-profile-form" id="editProfileForm">
+                <div class="form-group">
+                    <label for="editName">نام کامل</label>
+                    <input type="text" id="editName" placeholder="نام خود را وارد کنید">
+                </div>
+                <div class="form-group">
+                    <label for="editBio">بیوگرافی</label>
+                    <textarea id="editBio" placeholder="درباره خود بنویسید..."></textarea>
+                </div>
+                <div class="form-actions">
+                    <button class="save-btn" id="saveProfileBtn">
+                        <i class="fas fa-save"></i>
+                        ذخیره تغییرات
+                    </button>
+                    <button class="cancel-btn" id="cancelEditBtn">
+                        <i class="fas fa-times"></i>
+                        انصراف
+                    </button>
+                </div>
+            </div>
+            
+            <div class="profile-actions">
+                <button class="profile-btn secondary" id="editProfileBtn">
+                    <i class="fas fa-edit"></i>
+                    ویرایش پروفایل
+                </button>
+                <button class="profile-btn secondary" id="adminPanelBtn" style="display: none;">
+                    <i class="fas fa-cog"></i>
+                    پنل مدیریت
+                </button>
+                <button class="profile-btn secondary" id="closeProfile">
+                    <i class="fas fa-times"></i>
+                    بستن
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="avatar-crop-modal" id="avatarCropModal">
+        <div class="avatar-crop-content">
+            <div class="avatar-crop-header">
+                <h3>ویرایش عکس پروفایل</h3>
+                <p>عکس خود را برش دهید و موقعیت آن را تنظیم کنید</p>
+            </div>
+            
+            <div class="avatar-crop-preview" id="avatarCropPreview">
+                <img id="cropImage" src="" alt="Preview">
+            </div>
+            
+            <div class="crop-controls">
+                <div class="zoom-control">
+                    <label for="zoomSlider">بزرگنمایی:</label>
+                    <input type="range" id="zoomSlider" min="1" max="3" step="0.1" value="1">
+                </div>
+                
+                <div class="position-controls">
+                    <button class="position-btn" id="moveUp">
+                        <i class="fas fa-arrow-up"></i>
+                    </button>
+                    <button class="position-btn" id="moveDown">
+                        <i class="fas fa-arrow-down"></i>
+                    </button>
+                    <button class="position-btn" id="moveLeft">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <button class="position-btn" id="moveRight">
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                    <button class="position-btn" id="resetPosition">
+                        <i class="fas fa-sync"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="crop-actions">
+                <button class="crop-save-btn" id="cropSaveBtn">
+                    <i class="fas fa-check"></i>
+                    تایید و ذخیره
+                </button>
+                <button class="crop-cancel-btn" id="cropCancelBtn">
+                    <i class="fas fa-times"></i>
+                    انصراف
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="media-modal" id="mediaModal">
+        <div class="media-modal-content">
+            <img id="modalImage" src="" alt="تصویر">
+            <video id="modalVideo" controls style="display: none;"></video>
+            <button class="close-media-modal" id="closeMediaModal">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="admin-panel" id="adminPanel">
+        <div class="admin-content">
+            <div class="admin-header">
+                <h2>پنل مدیریت</h2>
+                <p>مدیریت کاربران و سیستم</p>
+            </div>
+            
+            <div class="admin-stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalUsers">0</div>
+                    <div class="stat-label">کل کاربران</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="onlineUsersCount">0</div>
+                    <div class="stat-label">کاربران آنلاین</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="bannedUsers">0</div>
+                    <div class="stat-label">کاربران بن شده</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="verifiedUsersCount">0</div>
+                    <div class="stat-label">کاربران تایید شده</div>
+                </div>
+            </div>
+            
+            <div class="admin-section">
+                <h3><i class="fas fa-user-cog"></i> مدیریت کاربران</h3>
+                <div class="admin-user-list" id="adminUsersList">
+                </div>
+            </div>
+            
+            <div class="admin-section">
+                <h3><i class="fas fa-ban"></i> کاربران بن شده</h3>
+                <div class="admin-user-list" id="bannedUsersList">
+                </div>
+            </div>
+            
+            <div class="admin-section">
+                <h3><i class="fas fa-volume-mute"></i> کاربران میوت شده</h3>
+                <div class="admin-user-list" id="mutedUsersList">
+                </div>
+            </div>
+            
+            <div class="profile-actions">
+                <button class="profile-btn secondary" id="closeAdminPanel">
+                    <i class="fas fa-times"></i>
+                    بستن پنل مدیریت
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // توابع امنیتی
+            async function hashPassword(password) {
+                const encoder = new TextEncoder();
+                const data = encoder.encode(password);
+                const hash = await crypto.subtle.digest('SHA-256', data);
+                return Array.from(new Uint8Array(hash))
+                    .map(b => b.toString(16).padStart(2, '0'))
+                    .join('');
+            }
+
+            async function verifyPassword(password, hashedPassword) {
+                const newHash = await hashPassword(password);
+                return newHash === hashedPassword;
+            }
+
+            function sanitizeInput(input) {
+                if (typeof input !== 'string') return '';
+                const div = document.createElement('div');
+                div.textContent = input;
+                return div.innerHTML;
+            }
+
+            function isValidUsername(username) {
+                const usernameRegex = /^[a-zA-Z0-9_]{3,20}$/;
+                return usernameRegex.test(username);
+            }
+
+            function isValidName(name) {
+                const nameRegex = /^[\u0600-\u06FF\s]{2,30}$/;
+                return nameRegex.test(name);
+            }
+
+            function isValidPassword(password) {
+                return password && password.length >= 6;
+            }
+
+            function validateImageFile(file) {
+                const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+                if (!allowedTypes.includes(file.type)) {
+                    throw new Error('فقط فایل‌های تصویری مجاز هستند');
+                }
+                
+                const maxSize = 5 * 1024 * 1024;
+                if (file.size > maxSize) {
+                    throw new Error('حجم فایل باید کمتر از 5 مگابایت باشد');
+                }
+                
+                const fileName = file.name.toLowerCase();
+                const dangerousExtensions = ['.php', '.exe', '.js', '.html', '.htm'];
+                if (dangerousExtensions.some(ext => fileName.includes(ext))) {
+                    throw new Error('نوع فایل نامعتبر');
+                }
+                
+                return true;
+            }
+
+            function validateMediaFile(file, type) {
+                let allowedTypes = [];
+                let maxSize = 0;
+                let errorMessage = '';
+                
+                switch(type) {
+                    case 'image':
+                        allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+                        maxSize = 5 * 1024 * 1024;
+                        errorMessage = 'فقط فایل‌های تصویری مجاز هستند';
+                        break;
+                    case 'video':
+                        allowedTypes = ['video/mp4', 'video/webm', 'video/ogg'];
+                        maxSize = 20 * 1024 * 1024;
+                        errorMessage = 'فقط فایل‌های ویدیویی مجاز هستند';
+                        break;
+                    case 'audio':
+                        allowedTypes = ['audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/webm'];
+                        maxSize = 10 * 1024 * 1024;
+                        errorMessage = 'فقط فایل‌های صوتی مجاز هستند';
+                        break;
+                    case 'file':
+                        maxSize = 50 * 1024 * 1024;
+                        errorMessage = 'حجم فایل بسیار بزرگ است';
+                        break;
+                }
+                
+                if (type !== 'file' && !allowedTypes.includes(file.type)) {
+                    throw new Error(errorMessage);
+                }
+                
+                if (file.size > maxSize) {
+                    throw new Error(`حجم فایل باید کمتر از ${maxSize / (1024 * 1024)} مگابایت باشد`);
+                }
+                
+                const fileName = file.name.toLowerCase();
+                const dangerousExtensions = ['.php', '.exe', '.js', '.bat', '.cmd', '.sh'];
+                if (dangerousExtensions.some(ext => fileName.includes(ext))) {
+                    throw new Error('نوع فایل نامعتبر');
+                }
+                
+                return true;
+            }
+
+            function formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+
+            let loginAttempts = JSON.parse(localStorage.getItem('loginAttempts')) || {};
+
+            function checkLoginAttempts(username) {
+                const now = Date.now();
+                const userAttempts = loginAttempts[username] || { count: 0, lastAttempt: 0 };
+                
+                if (now - userAttempts.lastAttempt > 15 * 60 * 1000) {
+                    userAttempts.count = 0;
+                }
+                
+                if (userAttempts.count >= 5) {
+                    const timeLeft = Math.ceil((15 * 60 * 1000 - (now - userAttempts.lastAttempt)) / 1000 / 60);
+                    throw new Error(`حساب شما به دلیل تلاش‌های ناموفق متعدد به مدت ${timeLeft} دقیقه قفل شده است`);
+                }
+                
+                return userAttempts;
+            }
+
+            function updateLoginAttempts(username, success) {
+                if (!loginAttempts[username]) {
+                    loginAttempts[username] = { count: 0, lastAttempt: 0 };
+                }
+                
+                if (success) {
+                    loginAttempts[username].count = 0;
+                } else {
+                    loginAttempts[username].count++;
+                    loginAttempts[username].lastAttempt = Date.now();
+                }
+                
+                localStorage.setItem('loginAttempts', JSON.stringify(loginAttempts));
+            }
+
+            function safeInnerHTML(element, content) {
+                if (!element || !content) return;
+                element.textContent = content;
+            }
+
+            // متغیرهای اصلی
+            const authContainer = document.getElementById('authContainer');
+            const chatContainer = document.getElementById('chatContainer');
+            const authForm = document.getElementById('authForm');
+            const authTitle = document.getElementById('authTitle');
+            const authButton = document.getElementById('authButton');
+            const nameField = document.getElementById('nameField');
+            const switchText = document.getElementById('switchText');
+            const switchLink = document.getElementById('switchLink');
+            const errorMessage = document.getElementById('errorMessage');
+            const logoutButton = document.getElementById('logoutButton');
+            
+            const chatMessages = document.getElementById('chatMessages');
+            const messageInput = document.getElementById('messageInput');
+            const sendButton = document.getElementById('sendButton');
+            const welcomeMessage = document.querySelector('.welcome-message');
+            const chatTitle = document.getElementById('chatTitle');
+            
+            const currentChatInfo = document.getElementById('currentChatInfo');
+            const currentChatAvatar = document.getElementById('currentChatAvatar');
+            const currentChatName = document.getElementById('currentChatName');
+            const currentChatStatus = document.getElementById('currentChatStatus');
+            
+            const usersList = document.getElementById('usersList');
+            const usersTabs = document.querySelectorAll('.users-tab');
+            const onlineCount = document.getElementById('onlineCount');
+            const userSearch = document.getElementById('userSearch');
+            
+            const headerAvatar = document.getElementById('headerAvatar');
+            const userAvatar = document.getElementById('userAvatar');
+            const verifiedBadge = document.getElementById('verifiedBadge');
+            const profileModal = document.getElementById('profileModal');
+            const profileAvatar = document.getElementById('profileAvatar');
+            const profileName = document.getElementById('profileName');
+            const profileUsername = document.getElementById('profileUsername');
+            const profileBio = document.getElementById('profileBio');
+            const profileVerifiedBadge = document.getElementById('profileVerifiedBadge');
+            const closeProfile = document.getElementById('closeProfile');
+            const editProfileBtn = document.getElementById('editProfileBtn');
+            const adminPanelBtn = document.getElementById('adminPanelBtn');
+            const changeAvatarBtn = document.getElementById('changeAvatarBtn');
+            const removeAvatarBtn = document.getElementById('removeAvatarBtn');
+            const avatarUpload = document.getElementById('avatarUpload');
+            
+            const editProfileForm = document.getElementById('editProfileForm');
+            const editName = document.getElementById('editName');
+            const editBio = document.getElementById('editBio');
+            const saveProfileBtn = document.getElementById('saveProfileBtn');
+            const cancelEditBtn = document.getElementById('cancelEditBtn');
+            
+            const avatarCropModal = document.getElementById('avatarCropModal');
+            const avatarCropPreview = document.getElementById('avatarCropPreview');
+            const cropImage = document.getElementById('cropImage');
+            const zoomSlider = document.getElementById('zoomSlider');
+            const moveUp = document.getElementById('moveUp');
+            const moveDown = document.getElementById('moveDown');
+            const moveLeft = document.getElementById('moveLeft');
+            const moveRight = document.getElementById('moveRight');
+            const resetPosition = document.getElementById('resetPosition');
+            const cropSaveBtn = document.getElementById('cropSaveBtn');
+            const cropCancelBtn = document.getElementById('cropCancelBtn');
+            
+            const mediaModal = document.getElementById('mediaModal');
+            const modalImage = document.getElementById('modalImage');
+            const modalVideo = document.getElementById('modalVideo');
+            const closeMediaModal = document.getElementById('closeMediaModal');
+            
+            const mediaPreview = document.getElementById('mediaPreview');
+            const previewImage = document.getElementById('previewImage');
+            const previewVideo = document.getElementById('previewVideo');
+            const removePreview = document.getElementById('removePreview');
+            
+            const imageBtn = document.getElementById('imageBtn');
+            const videoBtn = document.getElementById('videoBtn');
+            const audioBtn = document.getElementById('audioBtn');
+            const fileBtn = document.getElementById('fileBtn');
+            const imageUpload = document.getElementById('imageUpload');
+            const videoUpload = document.getElementById('videoUpload');
+            const audioUpload = document.getElementById('audioUpload');
+            const fileUpload = document.getElementById('fileUpload');
+            
+            const adminPanel = document.getElementById('adminPanel');
+            const closeAdminPanel = document.getElementById('closeAdminPanel');
+            const adminUsersList = document.getElementById('adminUsersList');
+            const bannedUsersList = document.getElementById('bannedUsersList');
+            const mutedUsersList = document.getElementById('mutedUsersList');
+            const totalUsers = document.getElementById('totalUsers');
+            const onlineUsersCount = document.getElementById('onlineUsersCount');
+            const bannedUsersCount = document.getElementById('bannedUsers');
+            const verifiedUsersCount = document.getElementById('verifiedUsersCount');
+            
+            let isLoginMode = true;
+            let users = JSON.parse(localStorage.getItem('chatUsers')) || [];
+            let verifiedUsers = JSON.parse(localStorage.getItem('verifiedUsers')) || ['Poshtibani'];
+            let userAvatars = JSON.parse(localStorage.getItem('userAvatars')) || {};
+            let userProfiles = JSON.parse(localStorage.getItem('userProfiles')) || {};
+            let onlineUsers = JSON.parse(localStorage.getItem('onlineUsers')) || [];
+            let savedMessages = JSON.parse(localStorage.getItem('savedMessages')) || {};
+            let bannedUsers = JSON.parse(localStorage.getItem('bannedUsers')) || [];
+            let mutedUsers = JSON.parse(localStorage.getItem('mutedUsers')) || [];
+            
+            let currentUserData = null;
+            let selectedUser = null;
+            let activeTab = 'online';
+            let searchQuery = '';
+            
+            // متغیرهای مربوط به ویرایش عکس
+            let currentCropImage = null;
+            let cropTransform = {
+                scale: 1,
+                translateX: 0,
+                translateY: 0
+            };
+
+            // متغیرهای مربوط به ارسال مدیا
+            let currentMediaFile = null;
+            let currentMediaType = null;
+
+            function initializeUsers() {
+                const supportUserExists = users.find(u => u.username === 'Poshtibani');
+                if (!supportUserExists) {
+                    hashPassword('matin1386').then(hashedPassword => {
+                        const supportUser = {
+                            id: 'support001',
+                            name: 'پشتیبانی',
+                            username: 'Poshtibani',
+                            password: hashedPassword,
+                            isAdmin: true
+                        };
+                        users.push(supportUser);
+                        localStorage.setItem('chatUsers', JSON.stringify(users));
+                        
+                        if (!userProfiles['Poshtibani']) {
+                            userProfiles['Poshtibani'] = {
+                                bio: 'کاربر پشتیبانی پیامرسان متانه',
+                                lastSeen: new Date().toISOString()
+                            };
+                        }
+                        
+                        if (!onlineUsers.includes('Poshtibani')) {
+                            onlineUsers.push('Poshtibani');
+                            localStorage.setItem('onlineUsers', JSON.stringify(onlineUsers));
+                        }
+                    });
+                }
+                
+                users = users.filter(user => 
+                    user.username !== 'alimohammadi' && 
+                    user.username !== 'saraahmadi' && 
+                    user.username !== 'mohammadrezaei'
+                );
+                
+                localStorage.setItem('chatUsers', JSON.stringify(users));
+                localStorage.setItem('onlineUsers', JSON.stringify(onlineUsers));
+                localStorage.setItem('userProfiles', JSON.stringify(userProfiles));
+                localStorage.setItem('bannedUsers', JSON.stringify(bannedUsers));
+                localStorage.setItem('mutedUsers', JSON.stringify(mutedUsers));
+            }
+
+            function generateAvatar(name) {
+                if (!name) return 'ن';
+                if (name === 'پشتیبانی') {
+                    return '<i class="fas fa-headset"></i>';
+                }
+                return sanitizeInput(name.charAt(0));
+            }
+            
+            function generateColor(name) {
+                const colors = [
+                    'linear-gradient(135deg, #4776E6 0%, #8E54E9 100%)',
+                    'linear-gradient(135deg, #FF5E62 0%, #FF9966 100%)',
+                    'linear-gradient(135deg, #42e695 0%, #3bb2b8 100%)',
+                    'linear-gradient(135deg, #FFD26F 0%, #3677FF 100%)',
+                    'linear-gradient(135deg, #C56CD6 0%, #3425AF 100%)'
+                ];
+                
+                let hash = 0;
+                for (let i = 0; i < name.length; i++) {
+                    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+                }
+                
+                return colors[Math.abs(hash) % colors.length];
+            }
+            
+            function isUserVerified(username) {
+                return verifiedUsers.includes(username);
+            }
+            
+            function isUserOnline(username) {
+                return onlineUsers.includes(username);
+            }
+            
+            function isUserBanned(username) {
+                return bannedUsers.includes(username);
+            }
+            
+            function isUserMuted(username) {
+                return mutedUsers.includes(username);
+            }
+            
+            function updateVerifiedDisplay() {
+                if (currentUserData && isUserVerified(currentUserData.username)) {
+                    verifiedBadge.style.display = 'flex';
+                    profileVerifiedBadge.style.display = 'inline';
+                    profileAvatar.classList.add('verified');
+                } else {
+                    verifiedBadge.style.display = 'none';
+                    profileVerifiedBadge.style.display = 'none';
+                    profileAvatar.classList.remove('verified');
+                }
+                
+                if (currentUserData && currentUserData.isAdmin) {
+                    adminPanelBtn.style.display = 'flex';
+                } else {
+                    adminPanelBtn.style.display = 'none';
+                }
+            }
+            
+            function loadUserAvatar(username, avatarElement) {
+                if (userAvatars[username]) {
+                    avatarElement.style.backgroundImage = `url(${userAvatars[username]})`;
+                    avatarElement.innerHTML = '';
+                } else {
+                    avatarElement.style.backgroundImage = 'none';
+                    const user = users.find(u => u.username === username);
+                    if (user) {
+                        avatarElement.innerHTML = generateAvatar(user.name);
+                        avatarElement.style.background = generateColor(user.name);
+                    }
+                }
+            }
+            
+            function loadUsersList() {
+                usersList.innerHTML = '';
+                
+                let usersToShow = [];
+                
+                if (activeTab === 'online') {
+                    usersToShow = users.filter(user => 
+                        user.username !== currentUserData.username && 
+                        isUserOnline(user.username) &&
+                        !isUserBanned(user.username)
+                    );
+                } else if (activeTab === 'saved') {
+                    const savedUserIds = Object.keys(savedMessages[currentUserData.username] || {});
+                    usersToShow = users.filter(user => 
+                        user.username !== currentUserData.username && 
+                        savedUserIds.includes(user.username) &&
+                        !isUserBanned(user.username)
+                    );
+                } else {
+                    usersToShow = users.filter(user => 
+                        user.username !== currentUserData.username &&
+                        !isUserBanned(user.username)
+                    );
+                }
+                
+                if (searchQuery) {
+                    usersToShow = usersToShow.filter(user => 
+                        user.name.includes(searchQuery) || 
+                        user.username.includes(searchQuery)
+                    );
+                }
+                
+                const onlineCountValue = users.filter(user => 
+                    user.username !== currentUserData.username && 
+                    isUserOnline(user.username) &&
+                    !isUserBanned(user.username)
+                ).length;
+                onlineCount.textContent = `${onlineCountValue} آنلاین`;
+                
+                usersToShow.forEach(user => {
+                    const userItem = document.createElement('div');
+                    userItem.className = 'user-item';
+                    if (selectedUser && selectedUser.username === user.username) {
+                        userItem.classList.add('active');
+                    }
+                    
+                    const status = isUserOnline(user.username) ? 'online' : 'offline';
+                    const statusText = isUserOnline(user.username) ? 'آنلاین' : 'آفلاین';
+                    
+                    userItem.innerHTML = `
+                        <div class="user-avatar-small" id="list-avatar-${user.username}">
+                            ${generateAvatar(user.name)}
+                            <div class="user-status ${status}"></div>
+                        </div>
+                        <div class="user-info-small">
+                            <div class="user-name">
+                                ${sanitizeInput(user.name)}
+                                ${isUserVerified(user.username) ? '<span class="verified-text"><span class="verified-badge-telegram"><i class="fas fa-check"></i></span></span>' : ''}
+                                ${user.isAdmin ? '<span class="user-badge">ادمین</span>' : ''}
+                                ${isUserMuted(user.username) ? '<span style="color:#f39c12;"><i class="fas fa-volume-mute"></i></span>' : ''}
+                            </div>
+                            <div class="user-username">@${sanitizeInput(user.username)}</div>
+                            <div class="user-status-text">${statusText}</div>
+                        </div>
+                    `;
+                    
+                    userItem.addEventListener('click', () => {
+                        selectUser(user);
+                    });
+                    
+                    usersList.appendChild(userItem);
+                    
+                    const avatarElement = document.getElementById(`list-avatar-${user.username}`);
+                    loadUserAvatar(user.username, avatarElement);
+                    
+                    // اضافه کردن کلیک روی آواتار برای نمایش پروفایل
+                    avatarElement.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        showUserProfile(user);
+                    });
+                });
+                
+                if (usersToShow.length === 0) {
+                    const emptyMessage = document.createElement('div');
+                    emptyMessage.className = 'welcome-message';
+                    emptyMessage.style.padding = '30px 20px';
+                    emptyMessage.style.fontSize = '0.9rem';
+                    
+                    if (searchQuery) {
+                        emptyMessage.innerHTML = `
+                            <i class="fas fa-search"></i>
+                            <p>هیچ کاربری با "${sanitizeInput(searchQuery)}" یافت نشد</p>
+                        `;
+                    } else {
+                        emptyMessage.innerHTML = `
+                            <i class="fas fa-users"></i>
+                            <p>${activeTab === 'online' ? 
+                                'هیچ کاربر آنلاینی وجود ندارد' : 
+                                activeTab === 'saved' ? 
+                                'هیچ پیام ذخیره شده‌ای ندارید' : 
+                                'هیچ کاربری وجود ندارد'}</p>
+                        `;
+                    }
+                    
+                    usersList.appendChild(emptyMessage);
+                }
+            }
+            
+            function showUserProfile(user) {
+                if (!user) return;
+                
+                const profile = userProfiles[user.username] || {};
+                
+                // پر کردن اطلاعات پروفایل
+                safeInnerHTML(profileName, user.name);
+                safeInnerHTML(profileUsername, `@${user.username}`);
+                safeInnerHTML(profileBio, profile.bio || 'این کاربر هنوز بیوگرافی اضافه نکرده است');
+                
+                // نمایش تیک آبی
+                if (isUserVerified(user.username)) {
+                    profileVerifiedBadge.style.display = 'inline';
+                    profileAvatar.classList.add('verified');
+                } else {
+                    profileVerifiedBadge.style.display = 'none';
+                    profileAvatar.classList.remove('verified');
+                }
+                
+                // بارگذاری آواتار
+                loadUserAvatar(user.username, profileAvatar);
+                
+                // مخفی کردن دکمه‌های ویرایش
+                editProfileBtn.style.display = 'none';
+                changeAvatarBtn.style.display = 'none';
+                removeAvatarBtn.style.display = 'none';
+                editProfileForm.style.display = 'none';
+                
+                profileModal.style.display = 'flex';
+            }
+            
+            function selectUser(user) {
+                if (!user || !user.username) {
+                    console.error('کاربر نامعتبر انتخاب شده است');
+                    return;
+                }
+                
+                selectedUser = user;
+                updateChatHeader(user);
+                loadUsersList();
+                loadChatMessages();
+            }
+            
+            function updateChatHeader(user) {
+                currentChatInfo.style.display = 'flex';
+                chatTitle.style.display = 'none';
+                loadUserAvatar(user.username, currentChatAvatar);
+                safeInnerHTML(currentChatName, user.name);
+                safeInnerHTML(currentChatStatus, isUserOnline(user.username) ? 'آنلاین' : 'آفلاین');
+                currentChatStatus.style.color = isUserOnline(user.username) ? '#4CAF50' : '#9E9E9E';
+                
+                // اضافه کردن کلیک روی آواتار برای نمایش پروفایل
+                currentChatAvatar.addEventListener('click', () => {
+                    showUserProfile(user);
+                });
+            }
+            
+            function getChatKey(user1, user2) {
+                if (!user1 || !user2) {
+                    console.error('نام کاربری نامعتبر برای تولید کلید چت');
+                    return 'invalid_chat';
+                }
+                return `chat_${[user1, user2].sort().join('_')}`;
+            }
+            
+            function loadChatMessages() {
+                if (!selectedUser || !currentUserData) {
+                    console.error('هیچ کاربری برای چت انتخاب نشده است');
+                    return;
+                }
+                
+                chatMessages.innerHTML = '';
+                const chatKey = getChatKey(currentUserData.username, selectedUser.username);
+                const messages = JSON.parse(localStorage.getItem(chatKey)) || [];
+                
+                messages.forEach(msg => {
+                    if (msg.text || msg.media) {
+                        const isSent = msg.senderUsername === currentUserData.username;
+                        addMessageToChat(msg, isSent, false);
+                    }
+                });
+                
+                if (messages.length === 0) {
+                    const welcomeMsg = document.createElement('div');
+                    welcomeMsg.className = 'welcome-message';
+                    welcomeMsg.innerHTML = `
+                        <i class="fas fa-comment"></i>
+                        <h3>شروع گفتگو با ${sanitizeInput(selectedUser.name)}</h3>
+                        <p>اولین پیام را ارسال کنید تا چت شروع شود</p>
+                    `;
+                    chatMessages.appendChild(welcomeMsg);
+                }
+            }
+            
+            function saveMessage(message) {
+                if (!selectedUser || !currentUserData) return;
+                
+                const chatKey = getChatKey(currentUserData.username, selectedUser.username);
+                const messages = JSON.parse(localStorage.getItem(chatKey)) || [];
+                
+                messages.push(message);
+                localStorage.setItem(chatKey, JSON.stringify(messages));
+            }
+            
+            function saveMessageToSaved(message, senderUsername) {
+                if (!currentUserData || !senderUsername) {
+                    console.error('اطلاعات نامعتبر برای ذخیره پیام');
+                    return;
+                }
+                
+                if (!savedMessages[currentUserData.username]) {
+                    savedMessages[currentUserData.username] = {};
+                }
+                
+                if (!savedMessages[currentUserData.username][senderUsername]) {
+                    savedMessages[currentUserData.username][senderUsername] = [];
+                }
+                
+                savedMessages[currentUserData.username][senderUsername].push(message);
+                localStorage.setItem('savedMessages', JSON.stringify(savedMessages));
+            }
+            
+            function loadProfileData() {
+                if (!currentUserData) return;
+                
+                const profile = userProfiles[currentUserData.username] || {};
+                
+                safeInnerHTML(profileName, currentUserData.name);
+                safeInnerHTML(profileUsername, `@${currentUserData.username}`);
+                safeInnerHTML(profileBio, profile.bio || 'هنوز بیوگرافی اضافه نکرده‌اید');
+                
+                if (isUserVerified(currentUserData.username)) {
+                    profileVerifiedBadge.style.display = 'inline';
+                    profileAvatar.classList.add('verified');
+                } else {
+                    profileVerifiedBadge.style.display = 'none';
+                    profileAvatar.classList.remove('verified');
+                }
+                
+                loadUserAvatar(currentUserData.username, profileAvatar);
+                
+                // پر کردن فرم ویرایش
+                editName.value = currentUserData.name;
+                editBio.value = profile.bio || '';
+                
+                // نمایش دکمه‌های ویرایش
+                editProfileBtn.style.display = 'flex';
+                changeAvatarBtn.style.display = 'flex';
+                removeAvatarBtn.style.display = 'flex';
+            }
+            
+            function updateCropPreview() {
+                if (!currentCropImage) return;
+                
+                const transform = `scale(${cropTransform.scale}) translate(${cropTransform.translateX}px, ${cropTransform.translateY}px)`;
+                cropImage.style.transform = transform;
+            }
+            
+            function resetCropTransform() {
+                cropTransform = {
+                    scale: 1,
+                    translateX: 0,
+                    translateY: 0
+                };
+                zoomSlider.value = 1;
+                updateCropPreview();
+            }
+            
+            function loadAdminPanel() {
+                safeInnerHTML(totalUsers, users.length);
+                safeInnerHTML(onlineUsersCount, onlineUsers.length);
+                safeInnerHTML(bannedUsersCount, bannedUsers.length);
+                safeInnerHTML(verifiedUsersCount, verifiedUsers.length);
+                
+                adminUsersList.innerHTML = '';
+                users.forEach(user => {
+                    if (user.username !== 'Poshtibani') {
+                        const userItem = document.createElement('div');
+                        userItem.className = 'admin-user-item';
+                        
+                        userItem.innerHTML = `
+                            <div class="admin-user-info">
+                                <div class="admin-user-avatar">${generateAvatar(user.name)}</div>
+                                <div>
+                                    <div>${sanitizeInput(user.name)}</div>
+                                    <div style="font-size:0.7rem;color:#666;">@${sanitizeInput(user.username)}</div>
+                                </div>
+                            </div>
+                            <div class="admin-actions">
+                                ${!isUserBanned(user.username) ? 
+                                    `<button class="admin-action-btn ban" data-user="${sanitizeInput(user.username)}" data-action="ban">
+                                        <i class="fas fa-ban"></i> بن
+                                    </button>` : 
+                                    `<button class="admin-action-btn unban" data-user="${sanitizeInput(user.username)}" data-action="unban">
+                                        <i class="fas fa-check"></i> آنبن
+                                    </button>`
+                                }
+                                ${!isUserVerified(user.username) ? 
+                                    `<button class="admin-action-btn verify" data-user="${sanitizeInput(user.username)}" data-action="verify">
+                                        <i class="fas fa-check-circle"></i> تیک
+                                    </button>` : 
+                                    `<button class="admin-action-btn" style="background:#95a5a6;" data-user="${sanitizeInput(user.username)}" data-action="unverify">
+                                        <i class="fas fa-times-circle"></i> حذف تیک
+                                    </button>`
+                                }
+                                ${!isUserMuted(user.username) ? 
+                                    `<button class="admin-action-btn mute" data-user="${sanitizeInput(user.username)}" data-action="mute">
+                                        <i class="fas fa-volume-mute"></i> میوت
+                                    </button>` : 
+                                    `<button class="admin-action-btn unmute" data-user="${sanitizeInput(user.username)}" data-action="unmute">
+                                        <i class="fas fa-volume-up"></i> آنمیوت
+                                    </button>`
+                                }
+                            </div>
+                        `;
+                        
+                        adminUsersList.appendChild(userItem);
+                    }
+                });
+                
+                bannedUsersList.innerHTML = '';
+                bannedUsers.forEach(username => {
+                    const user = users.find(u => u.username === username);
+                    if (user) {
+                        const userItem = document.createElement('div');
+                        userItem.className = 'admin-user-item';
+                        userItem.innerHTML = `
+                            <div class="admin-user-info">
+                                <div class="admin-user-avatar">${generateAvatar(user.name)}</div>
+                                <div>
+                                    <div>${sanitizeInput(user.name)}</div>
+                                    <div style="font-size:0.7rem;color:#666;">@${sanitizeInput(user.username)}</div>
+                                </div>
+                            </div>
+                            <div class="admin-actions">
+                                <button class="admin-action-btn unban" data-user="${sanitizeInput(user.username)}" data-action="unban">
+                                    <i class="fas fa-check"></i> آنبن
+                                </button>
+                            </div>
+                        `;
+                        bannedUsersList.appendChild(userItem);
+                    }
+                });
+                
+                mutedUsersList.innerHTML = '';
+                mutedUsers.forEach(username => {
+                    const user = users.find(u => u.username === username);
+                    if (user) {
+                        const userItem = document.createElement('div');
+                        userItem.className = 'admin-user-item';
+                        userItem.innerHTML = `
+                            <div class="admin-user-info">
+                                <div class="admin-user-avatar">${generateAvatar(user.name)}</div>
+                                <div>
+                                    <div>${sanitizeInput(user.name)}</div>
+                                    <div style="font-size:0.7rem;color:#666;">@${sanitizeInput(user.username)}</div>
+                                </div>
+                            </div>
+                            <div class="admin-actions">
+                                <button class="admin-action-btn unmute" data-user="${sanitizeInput(user.username)}" data-action="unmute">
+                                    <i class="fas fa-volume-up"></i> آنمیوت
+                                </button>
+                            </div>
+                        `;
+                        mutedUsersList.appendChild(userItem);
+                    }
+                });
+                
+                document.querySelectorAll('.admin-action-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const username = this.getAttribute('data-user');
+                        const action = this.getAttribute('data-action');
+                        handleAdminAction(username, action);
+                    });
+                });
+            }
+            
+            function handleAdminAction(username, action) {
+                const user = users.find(u => u.username === username);
+                if (!user) return;
+                
+                switch(action) {
+                    case 'ban':
+                        if (!bannedUsers.includes(username)) {
+                            bannedUsers.push(username);
+                            onlineUsers = onlineUsers.filter(u => u !== username);
+                            alert(`کاربر ${user.name} بن شد`);
+                        }
+                        break;
+                    case 'unban':
+                        bannedUsers = bannedUsers.filter(u => u !== username);
+                        alert(`کاربر ${user.name} آنبن شد`);
+                        break;
+                    case 'verify':
+                        if (!verifiedUsers.includes(username)) {
+                            verifiedUsers.push(username);
+                            alert(`تیک آبی به کاربر ${user.name} داده شد`);
+                        }
+                        break;
+                    case 'unverify':
+                        verifiedUsers = verifiedUsers.filter(u => u !== username);
+                        alert(`تیک آبی از کاربر ${user.name} گرفته شد`);
+                        break;
+                    case 'mute':
+                        if (!mutedUsers.includes(username)) {
+                            mutedUsers.push(username);
+                            alert(`کاربر ${user.name} میوت شد`);
+                        }
+                        break;
+                    case 'unmute':
+                        mutedUsers = mutedUsers.filter(u => u !== username);
+                        alert(`کاربر ${user.name} آنمیوت شد`);
+                        break;
+                }
+                
+                localStorage.setItem('bannedUsers', JSON.stringify(bannedUsers));
+                localStorage.setItem('verifiedUsers', JSON.stringify(verifiedUsers));
+                localStorage.setItem('mutedUsers', JSON.stringify(mutedUsers));
+                localStorage.setItem('onlineUsers', JSON.stringify(onlineUsers));
+                
+                loadAdminPanel();
+                loadUsersList();
+                updateVerifiedDisplay();
+            }
+            
+            function addMessageToChat(message, isSent, saveToStorage = true) {
+                if (!message.text && !message.media) {
+                    console.error('پیام خالی نمی‌تواند ارسال شود');
+                    return;
+                }
+                
+                if (welcomeMessage && welcomeMessage.parentNode) {
+                    welcomeMessage.parentNode.removeChild(welcomeMessage);
+                }
+                
+                const messageContainer = document.createElement('div');
+                messageContainer.classList.add('message-container');
+                messageContainer.classList.add(isSent ? 'sent' : 'received');
+                
+                const messageAvatar = document.createElement('div');
+                messageAvatar.classList.add('message-avatar');
+                
+                let avatarText = '';
+                let avatarColor = '';
+                let senderUsername = '';
+                
+                if (isSent) {
+                    avatarText = generateAvatar(currentUserData.name);
+                    avatarColor = generateColor(currentUserData.name);
+                    senderUsername = currentUserData.username;
+                } else {
+                    avatarText = generateAvatar(selectedUser.name);
+                    avatarColor = generateColor(selectedUser.name);
+                    senderUsername = selectedUser.username;
+                }
+                
+                if (isUserVerified(senderUsername)) {
+                    messageAvatar.classList.add('verified');
+                }
+                
+                if (userAvatars[senderUsername]) {
+                    messageAvatar.style.backgroundImage = `url(${userAvatars[senderUsername]})`;
+                    messageAvatar.innerHTML = '';
+                } else {
+                    messageAvatar.style.backgroundImage = 'none';
+                    messageAvatar.innerHTML = avatarText;
+                    messageAvatar.style.background = avatarColor;
+                }
+                
+                // اضافه کردن کلیک روی آواتار برای نمایش پروفایل
+                const senderUser = isSent ? currentUserData : selectedUser;
+                messageAvatar.addEventListener('click', () => {
+                    showUserProfile(senderUser);
+                });
+                
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('message');
+                
+                const time = new Date();
+                const timeString = `${time.getHours()}:${time.getMinutes().toString().padStart(2, '0')}`;
+                
+                let messageContent = '';
+                
+                if (!isSent) {
+                    messageContent += `<div class="message-sender">${sanitizeInput(senderUser.name)}`;
+                    if (isUserVerified(senderUsername)) {
+                        messageContent += ` <span class="verified-text"><span class="verified-badge-telegram"><i class="fas fa-check"></i></span></span>`;
+                    }
+                    messageContent += `</div>`;
+                }
+                
+                // محتوای پیام
+                if (message.text) {
+                    messageContent += `<div class="message-content">${sanitizeInput(message.text)}</div>`;
+                }
+                
+                // مدیا
+                if (message.media) {
+                    if (message.media.type === 'image') {
+                        messageContent += `<img src="${message.media.url}" class="message-media" alt="تصویر">`;
+                    } else if (message.media.type === 'video') {
+                        messageContent += `<video src="${message.media.url}" class="message-media" controls></video>`;
+                    } else if (message.media.type === 'audio') {
+                        messageContent += `
+                            <div class="message-audio">
+                                <audio src="${message.media.url}" class="audio-player" controls></audio>
+                            </div>
+                        `;
+                    } else if (message.media.type === 'file') {
+                        messageContent += `
+                            <div class="message-file">
+                                <div class="file-icon">
+                                    <i class="fas fa-file"></i>
+                                </div>
+                                <div class="file-info">
+                                    <div class="file-name">${sanitizeInput(message.media.name)}</div>
+                                    <div class="file-size">${formatFileSize(message.media.size)}</div>
+                                </div>
+                                <button class="download-btn" data-url="${message.media.url}" data-name="${message.media.name}">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </div>
+                        `;
+                    }
+                }
+                
+                messageContent += `<div class="message-time">${timeString}</div>`;
+                
+                messageDiv.innerHTML = messageContent;
+                
+                // اضافه کردن event listener برای مدیا
+                const mediaElements = messageDiv.querySelectorAll('.message-media');
+                mediaElements.forEach(media => {
+                    media.addEventListener('click', () => {
+                        if (media.tagName === 'IMG') {
+                            modalImage.src = media.src;
+                            modalImage.style.display = 'block';
+                            modalVideo.style.display = 'none';
+                            mediaModal.style.display = 'flex';
+                        } else if (media.tagName === 'VIDEO') {
+                            modalVideo.src = media.src;
+                            modalVideo.style.display = 'block';
+                            modalImage.style.display = 'none';
+                            mediaModal.style.display = 'flex';
+                        }
+                    });
+                });
+                
+                // اضافه کردن event listener برای دکمه دانلود
+                const downloadBtns = messageDiv.querySelectorAll('.download-btn');
+                downloadBtns.forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const url = this.getAttribute('data-url');
+                        const name = this.getAttribute('data-name');
+                        
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = name;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                    });
+                });
+                
+                if (!isSent) {
+                    const messageActions = document.createElement('div');
+                    messageActions.className = 'message-actions';
+                    messageActions.innerHTML = `
+                        <button class="message-action save-message" title="ذخیره پیام">
+                            <i class="far fa-bookmark"></i>
+                        </button>
+                    `;
+                    messageDiv.appendChild(messageActions);
+                    
+                    messageActions.querySelector('.save-message').addEventListener('click', function() {
+                        saveMessageToSaved(message, senderUsername);
+                        this.innerHTML = '<i class="fas fa-bookmark"></i>';
+                        this.style.color = '#4776E6';
+                    });
+                }
+                
+                if (isSent) {
+                    messageContainer.appendChild(messageDiv);
+                    messageContainer.appendChild(messageAvatar);
+                } else {
+                    messageContainer.appendChild(messageAvatar);
+                    messageContainer.appendChild(messageDiv);
+                }
+                
+                chatMessages.appendChild(messageContainer);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                
+                if (saveToStorage && selectedUser) {
+                    saveMessage(message);
+                }
+            }
+            
+            function clearMediaPreview() {
+                mediaPreview.style.display = 'none';
+                previewImage.src = '';
+                previewImage.style.display = 'none';
+                previewVideo.src = '';
+                previewVideo.style.display = 'none';
+                currentMediaFile = null;
+                currentMediaType = null;
+            }
+            
+            // رویدادهای اصلی
+            switchLink.addEventListener('click', function() {
+                isLoginMode = !isLoginMode;
+                
+                if (isLoginMode) {
+                    safeInnerHTML(authTitle, 'ورود به حساب کاربری');
+                    safeInnerHTML(authButton, 'ورود');
+                    safeInnerHTML(switchText, 'حساب کاربری ندارید؟');
+                    safeInnerHTML(switchLink, 'ثبت نام');
+                    nameField.style.display = 'none';
+                } else {
+                    safeInnerHTML(authTitle, 'ایجاد حساب کاربری');
+                    safeInnerHTML(authButton, 'ثبت نام');
+                    safeInnerHTML(switchText, 'حساب کاربری دارید؟');
+                    safeInnerHTML(switchLink, 'ورود');
+                    nameField.style.display = 'flex';
+                }
+                
+                errorMessage.style.display = 'none';
+            });
+            
+            authForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const username = sanitizeInput(document.getElementById('username').value.trim());
+                const password = document.getElementById('password').value.trim();
+                const name = sanitizeInput(document.getElementById('name').value.trim());
+                
+                if (!username || !password) {
+                    showError('لطفا تمام فیلدها را پر کنید');
+                    return;
+                }
+                
+                if (!isLoginMode && !name) {
+                    showError('لطفا نام خود را وارد کنید');
+                    return;
+                }
+                
+                if (!isValidUsername(username)) {
+                    showError('نام کاربری باید بین ۳ تا ۲۰ کاراکتر و فقط شامل حروف انگلیسی، اعداد و زیرخط باشد');
+                    return;
+                }
+                
+                if (!isLoginMode && !isValidName(name)) {
+                    showError('نام باید بین ۲ تا ۳۰ کاراکتر و فقط شامل حروف فارسی باشد');
+                    return;
+                }
+                
+                if (!isValidPassword(password)) {
+                    showError('کلمه عبور باید حداقل ۶ کاراکتر باشد');
+                    return;
+                }
+                
+                if (isUserBanned(username)) {
+                    showError('این حساب کاربری مسدود شده است');
+                    return;
+                }
+                
+                if (isLoginMode) {
+                    const user = users.find(u => u.username === username);
+                    if (user) {
+                        try {
+                            checkLoginAttempts(username);
+                        } catch (error) {
+                            showError(error.message);
+                            return;
+                        }
+                        
+                        const isPasswordValid = await verifyPassword(password, user.password);
+                        if (isPasswordValid) {
+                            await loginUser(user);
+                        } else {
+                            updateLoginAttempts(username, false);
+                            showError('نام کاربری یا کلمه عبور نادرست است');
+                        }
+                    } else {
+                        updateLoginAttempts(username, false);
+                        showError('نام کاربری یا کلمه عبور نادرست است');
+                    }
+                } else {
+                    if (users.find(u => u.username === username)) {
+                        showError('این نام کاربری قبلا استفاده شده است');
+                        return;
+                    }
+                    
+                    const hashedPassword = await hashPassword(password);
+                    const newUser = {
+                        id: Date.now().toString(),
+                        name: name,
+                        username: username,
+                        password: hashedPassword,
+                        isAdmin: false
+                    };
+                    
+                    users.push(newUser);
+                    userProfiles[username] = {
+                        bio: 'عضو جدید پیامرسان متانه',
+                        lastSeen: new Date().toISOString()
+                    };
+                    
+                    localStorage.setItem('chatUsers', JSON.stringify(users));
+                    localStorage.setItem('userProfiles', JSON.stringify(userProfiles));
+                    await loginUser(newUser);
+                }
+            });
+            
+            function showError(message) {
+                safeInnerHTML(errorMessage, message);
+                errorMessage.style.display = 'block';
+            }
+            
+            async function loginUser(user) {
+                if (!user || !user.username) {
+                    showError('خطا در اطلاعات کاربر');
+                    return;
+                }
+                
+                currentUserData = user;
+                
+                if (!onlineUsers.includes(user.username)) {
+                    onlineUsers.push(user.username);
+                    localStorage.setItem('onlineUsers', JSON.stringify(onlineUsers));
+                }
+                
+                if (userProfiles[user.username]) {
+                    userProfiles[user.username].lastSeen = new Date().toISOString();
+                    localStorage.setItem('userProfiles', JSON.stringify(userProfiles));
+                }
+                
+                loadUserAvatar(user.username, userAvatar);
+                
+                authContainer.style.display = 'none';
+                chatContainer.style.display = 'flex';
+                messageInput.focus();
+                
+                updateLoginAttempts(user.username, true);
+                updateVerifiedDisplay();
+                loadUsersList();
+                loadProfileData();
+            }
+            
+            sendButton.addEventListener('click', function() {
+                const messageText = messageInput.value.trim();
+                
+                if ((!messageText && !currentMediaFile) || !selectedUser) {
+                    if (!selectedUser) {
+                        alert('لطفا ابتدا کاربری را از لیست انتخاب کنید');
+                    }
+                    return;
+                }
+                
+                const message = {
+                    text: messageText,
+                    isSent: true,
+                    senderName: currentUserData.name,
+                    senderUsername: currentUserData.username,
+                    timestamp: new Date().toISOString()
+                };
+                
+                if (currentMediaFile) {
+                    message.media = {
+                        type: currentMediaType,
+                        url: currentMediaFile,
+                        name: currentMediaType === 'file' ? 'فایل ارسالی' : '',
+                        size: 0
+                    };
+                }
+                
+                addMessageToChat(message, true);
+                
+                // پاک کردن فیلدها
+                messageInput.value = '';
+                clearMediaPreview();
+            });
+            
+            messageInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendButton.click();
+                }
+            });
+            
+            usersTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    usersTabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    activeTab = this.getAttribute('data-tab');
+                    loadUsersList();
+                });
+            });
+            
+            userSearch.addEventListener('input', function() {
+                searchQuery = this.value.trim();
+                loadUsersList();
+            });
+            
+            headerAvatar.addEventListener('click', function() {
+                if (currentUserData) {
+                    loadProfileData();
+                    profileModal.style.display = 'flex';
+                }
+            });
+            
+            editProfileBtn.addEventListener('click', function() {
+                editProfileForm.style.display = 'flex';
+                this.style.display = 'none';
+            });
+            
+            saveProfileBtn.addEventListener('click', function() {
+                const newName = editName.value.trim();
+                const newBio = editBio.value.trim();
+                
+                if (!newName) {
+                    alert('لطفا نام خود را وارد کنید');
+                    return;
+                }
+                
+                if (!isValidName(newName)) {
+                    alert('نام باید بین ۲ تا ۳۰ کاراکتر و فقط شامل حروف فارسی باشد');
+                    return;
+                }
+                
+                // به‌روزرسانی اطلاعات کاربر
+                currentUserData.name = newName;
+                userProfiles[currentUserData.username].bio = newBio;
+                
+                // به‌روزرسانی لیست کاربران
+                const userIndex = users.findIndex(u => u.username === currentUserData.username);
+                if (userIndex !== -1) {
+                    users[userIndex].name = newName;
+                }
+                
+                // ذخیره در localStorage
+                localStorage.setItem('chatUsers', JSON.stringify(users));
+                localStorage.setItem('userProfiles', JSON.stringify(userProfiles));
+                
+                // به‌روزرسانی نمایش
+                loadProfileData();
+                loadUsersList();
+                if (selectedUser && selectedUser.username === currentUserData.username) {
+                    updateChatHeader(selectedUser);
+                }
+                
+                editProfileForm.style.display = 'none';
+                editProfileBtn.style.display = 'flex';
+                
+                alert('پروفایل با موفقیت به‌روزرسانی شد');
+            });
+            
+            cancelEditBtn.addEventListener('click', function() {
+                editProfileForm.style.display = 'none';
+                editProfileBtn.style.display = 'flex';
+                loadProfileData(); // بازگرداندن مقادیر قبلی
+            });
+            
+            // مدیریت ارسال مدیا
+            imageBtn.addEventListener('click', function() {
+                imageUpload.click();
+            });
+            
+            videoBtn.addEventListener('click', function() {
+                videoUpload.click();
+            });
+            
+            audioBtn.addEventListener('click', function() {
+                audioUpload.click();
+            });
+            
+            fileBtn.addEventListener('click', function() {
+                fileUpload.click();
+            });
+            
+            imageUpload.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    try {
+                        validateMediaFile(file, 'image');
+                    } catch (error) {
+                        alert(error.message);
+                        this.value = '';
+                        return;
+                    }
+                    
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        previewImage.src = event.target.result;
+                        previewImage.style.display = 'block';
+                        previewVideo.style.display = 'none';
+                        mediaPreview.style.display = 'block';
+                        currentMediaFile = event.target.result;
+                        currentMediaType = 'image';
+                    };
+                    reader.readAsDataURL(file);
+                    this.value = '';
+                }
+            });
+            
+            videoUpload.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    try {
+                        validateMediaFile(file, 'video');
+                    } catch (error) {
+                        alert(error.message);
+                        this.value = '';
+                        return;
+                    }
+                    
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        previewVideo.src = event.target.result;
+                        previewVideo.style.display = 'block';
+                        previewImage.style.display = 'none';
+                        mediaPreview.style.display = 'block';
+                        currentMediaFile = event.target.result;
+                        currentMediaType = 'video';
+                    };
+                    reader.readAsDataURL(file);
+                    this.value = '';
+                }
+            });
+            
+            audioUpload.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    try {
+                        validateMediaFile(file, 'audio');
+                    } catch (error) {
+                        alert(error.message);
+                        this.value = '';
+                        return;
+                    }
+                    
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        currentMediaFile = event.target.result;
+                        currentMediaType = 'audio';
+                        
+                        // ارسال مستقیم صوت
+                        const message = {
+                            text: '',
+                            isSent: true,
+                            senderName: currentUserData.name,
+                            senderUsername: currentUserData.username,
+                            timestamp: new Date().toISOString(),
+                            media: {
+                                type: 'audio',
+                                url: event.target.result,
+                                name: file.name,
+                                size: file.size
+                            }
+                        };
+                        
+                        if (selectedUser) {
+                            addMessageToChat(message, true);
+                        } else {
+                            alert('لطفا ابتدا کاربری را از لیست انتخاب کنید');
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                    this.value = '';
+                }
+            });
+            
+            fileUpload.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    try {
+                        validateMediaFile(file, 'file');
+                    } catch (error) {
+                        alert(error.message);
+                        this.value = '';
+                        return;
+                    }
+                    
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        currentMediaFile = event.target.result;
+                        currentMediaType = 'file';
+                        
+                        // ارسال مستقیم فایل
+                        const message = {
+                            text: '',
+                            isSent: true,
+                            senderName: currentUserData.name,
+                            senderUsername: currentUserData.username,
+                            timestamp: new Date().toISOString(),
+                            media: {
+                                type: 'file',
+                                url: event.target.result,
+                                name: file.name,
+                                size: file.size
+                            }
+                        };
+                        
+                        if (selectedUser) {
+                            addMessageToChat(message, true);
+                        } else {
+                            alert('لطفا ابتدا کاربری را از لیست انتخاب کنید');
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                    this.value = '';
+                }
+            });
+            
+            removePreview.addEventListener('click', function() {
+                clearMediaPreview();
+            });
+            
+            adminPanelBtn.addEventListener('click', function() {
+                if (currentUserData && currentUserData.isAdmin) {
+                    loadAdminPanel();
+                    adminPanel.style.display = 'flex';
+                }
+            });
+            
+            closeAdminPanel.addEventListener('click', function() {
+                adminPanel.style.display = 'none';
+            });
+            
+            adminPanel.addEventListener('click', function(e) {
+                if (e.target === adminPanel) {
+                    adminPanel.style.display = 'none';
+                }
+            });
+            
+            changeAvatarBtn.addEventListener('click', function() {
+                avatarUpload.click();
+            });
+            
+            avatarUpload.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    try {
+                        validateImageFile(file);
+                    } catch (error) {
+                        alert(error.message);
+                        avatarUpload.value = '';
+                        return;
+                    }
+                    
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const imageUrl = event.target.result;
+                        currentCropImage = imageUrl;
+                        cropImage.src = imageUrl;
+                        resetCropTransform();
+                        avatarCropModal.style.display = 'flex';
+                    };
+                    
+                    reader.onerror = function() {
+                        alert('خطا در بارگذاری عکس. لطفا دوباره تلاش کنید');
+                    };
+                    
+                    reader.readAsDataURL(file);
+                    avatarUpload.value = '';
+                }
+            });
+            
+            removeAvatarBtn.addEventListener('click', function() {
+                if (confirm('آیا مطمئن هستید که می‌خواهید عکس پروفایل خود را حذف کنید؟')) {
+                    delete userAvatars[currentUserData.username];
+                    localStorage.setItem('userAvatars', JSON.stringify(userAvatars));
+                    
+                    loadUserAvatar(currentUserData.username, userAvatar);
+                    loadUserAvatar(currentUserData.username, profileAvatar);
+                    if (selectedUser && selectedUser.username === currentUserData.username) {
+                        loadUserAvatar(currentUserData.username, currentChatAvatar);
+                    }
+                    loadUsersList();
+                    
+                    alert('عکس پروفایل با موفقیت حذف شد');
+                }
+            });
+            
+            // کنترل‌های ویرایش عکس
+            zoomSlider.addEventListener('input', function() {
+                cropTransform.scale = parseFloat(this.value);
+                updateCropPreview();
+            });
+            
+            moveUp.addEventListener('click', function() {
+                cropTransform.translateY += 10;
+                updateCropPreview();
+            });
+            
+            moveDown.addEventListener('click', function() {
+                cropTransform.translateY -= 10;
+                updateCropPreview();
+            });
+            
+            moveLeft.addEventListener('click', function() {
+                cropTransform.translateX += 10;
+                updateCropPreview();
+            });
+            
+            moveRight.addEventListener('click', function() {
+                cropTransform.translateX -= 10;
+                updateCropPreview();
+            });
+            
+            resetPosition.addEventListener('click', function() {
+                resetCropTransform();
+            });
+            
+            cropSaveBtn.addEventListener('click', function() {
+                if (currentCropImage) {
+                    userAvatars[currentUserData.username] = currentCropImage;
+                    localStorage.setItem('userAvatars', JSON.stringify(userAvatars));
+                    
+                    loadUserAvatar(currentUserData.username, userAvatar);
+                    loadUserAvatar(currentUserData.username, profileAvatar);
+                    if (selectedUser && selectedUser.username === currentUserData.username) {
+                        loadUserAvatar(currentUserData.username, currentChatAvatar);
+                    }
+                    loadUsersList();
+                    
+                    avatarCropModal.style.display = 'none';
+                    alert('عکس پروفایل با موفقیت تغییر کرد');
+                }
+            });
+            
+            cropCancelBtn.addEventListener('click', function() {
+                avatarCropModal.style.display = 'none';
+            });
+            
+            avatarCropModal.addEventListener('click', function(e) {
+                if (e.target === avatarCropModal) {
+                    avatarCropModal.style.display = 'none';
+                }
+            });
+            
+            closeMediaModal.addEventListener('click', function() {
+                mediaModal.style.display = 'none';
+            });
+            
+            mediaModal.addEventListener('click', function(e) {
+                if (e.target === mediaModal) {
+                    mediaModal.style.display = 'none';
+                }
+            });
+            
+            closeProfile.addEventListener('click', function() {
+                profileModal.style.display = 'none';
+                editProfileForm.style.display = 'none';
+                editProfileBtn.style.display = 'flex';
+            });
+            
+            profileModal.addEventListener('click', function(e) {
+                if (e.target === profileModal) {
+                    profileModal.style.display = 'none';
+                    editProfileForm.style.display = 'none';
+                    editProfileBtn.style.display = 'flex';
+                }
+            });
+            
+            logoutButton.addEventListener('click', function() {
+                onlineUsers = onlineUsers.filter(u => u !== currentUserData.username);
+                localStorage.setItem('onlineUsers', JSON.stringify(onlineUsers));
+                
+                currentUserData = null;
+                selectedUser = null;
+                chatContainer.style.display = 'none';
+                authContainer.style.display = 'block';
+                
+                authForm.reset();
+                
+                chatMessages.innerHTML = `
+                    <div class="welcome-message">
+                        <i class="fas fa-comments"></i>
+                        <h3>به پیامرسان متانه خوش آمدید</h3>
+                        <p>برای شروع گفتگو، کاربری را از لیست سمت راست انتخاب کنید</p>
+                    </div>
+                `;
+                safeInnerHTML(chatTitle, 'پیامرسان متانه');
+                chatTitle.style.display = 'block';
+                currentChatInfo.style.display = 'none';
+            });
+            
+            initializeUsers();
+            
+            setInterval(() => {
+                if (!currentUserData) return;
+                
+                users.forEach(user => {
+                    if (user.username !== currentUserData.username && !isUserBanned(user.username)) {
+                        if (Math.random() > 0.7) {
+                            if (!onlineUsers.includes(user.username)) {
+                                onlineUsers.push(user.username);
+                            }
+                        } else if (Math.random() > 0.9) {
+                            onlineUsers = onlineUsers.filter(u => u !== user.username);
+                        }
+                    }
+                });
+                
+                localStorage.setItem('onlineUsers', JSON.stringify(onlineUsers));
+                loadUsersList();
+                
+                if (selectedUser) {
+                    safeInnerHTML(currentChatStatus, isUserOnline(selectedUser.username) ? 'آنلاین' : 'آفلاین');
+                    currentChatStatus.style.color = isUserOnline(selectedUser.username) ? '#4CAF50' : '#9E9E9E';
+                }
+            }, 10000);
+        });
+    </script>
+</body>
+</html>
