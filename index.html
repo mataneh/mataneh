@@ -3387,376 +3387,551 @@
             }, 10000);
         });
 
-    // تابع نمایش پیام خطا برای موبایل
+    // تابع نمایش پیام خطا برای موبایل با طراحی لوکس و انیمیشن پیشرفته
 function showMobileWarning() {
-    // اگر از قبل پیام نمایش داده شده، نمایش نده
-    if (document.getElementById('mobileWarningOverlay')) {
-        return;
-    }
+    if (document.getElementById('mobileWarningOverlay')) return;
 
-    // ایجاد استایل‌های انیمیشن
     const style = document.createElement('style');
     style.id = 'mobile-warning-styles';
     style.innerHTML = `
-        @keyframes shake {
-            0%, 100% { transform: translateX(0) scale(1); }
-            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px) scale(1.02); }
-            20%, 40%, 60%, 80% { transform: translateX(5px) scale(1.02); }
-        }
-        
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(50px) scale(0.8);
+        @keyframes cosmicFloat {
+            0%, 100% { 
+                transform: translateY(0px) rotate(0deg) scale(1);
+                filter: hue-rotate(0deg);
             }
-            to {
+            25% { 
+                transform: translateY(-20px) rotate(5deg) scale(1.05);
+                filter: hue-rotate(90deg);
+            }
+            50% { 
+                transform: translateY(-10px) rotate(-3deg) scale(1.02);
+                filter: hue-rotate(180deg);
+            }
+            75% { 
+                transform: translateY(-15px) rotate(2deg) scale(1.03);
+                filter: hue-rotate(270deg);
+            }
+        }
+
+        @keyframes nebulaGlow {
+            0% { 
+                background-position: 0% 50%;
+                opacity: 0.8;
+            }
+            50% { 
+                background-position: 100% 50%;
                 opacity: 1;
-                transform: translateY(0) scale(1);
+            }
+            100% { 
+                background-position: 0% 50%;
+                opacity: 0.8;
             }
         }
-        
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7); }
-            70% { box-shadow: 0 0 0 20px rgba(231, 76, 60, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
+
+        @keyframes stardustFall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
         }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
+
+        @keyframes hologramFlicker {
+            0%, 100% { 
+                opacity: 1;
+                filter: brightness(1) contrast(1);
+            }
+            50% { 
+                opacity: 0.95;
+                filter: brightness(1.2) contrast(1.1);
+            }
         }
-        
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-10px); }
-            60% { transform: translateY(-5px); }
+
+        @keyframes quantumPulse {
+            0% { 
+                box-shadow: 
+                    0 0 0 0 rgba(139, 69, 255, 0.7),
+                    0 0 0 0 rgba(255, 105, 180, 0.5),
+                    0 0 0 0 rgba(64, 224, 208, 0.3);
+            }
+            50% { 
+                box-shadow: 
+                    0 0 0 30px rgba(139, 69, 255, 0),
+                    0 0 0 20px rgba(255, 105, 180, 0.3),
+                    0 0 0 10px rgba(64, 224, 208, 0.5);
+            }
+            100% { 
+                box-shadow: 
+                    0 0 0 0 rgba(139, 69, 255, 0),
+                    0 0 0 0 rgba(255, 105, 180, 0),
+                    0 0 0 0 rgba(64, 224, 208, 0);
+            }
         }
-        
+
+        @keyframes matrixRain {
+            0% {
+                background-position: 0% 0%;
+            }
+            100% {
+                background-position: 0% 100%;
+            }
+        }
+
+        @keyframes cyberSlideIn {
+            0% {
+                opacity: 0;
+                transform: translateY(100px) perspective(1000px) rotateX(45deg) scale(0.8);
+                filter: blur(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) perspective(1000px) rotateX(0) scale(1);
+                filter: blur(0);
+            }
+        }
+
         .mobile-warning-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.15) 0%, transparent 50%),
+                linear-gradient(135deg, #0c0c1d 0%, #1a1a2e 50%, #16213e 100%);
+            background-size: 400% 400%;
+            animation: nebulaGlow 8s ease infinite;
             z-index: 9999;
             display: flex;
             justify-content: center;
             align-items: center;
             font-family: 'Vazirmatn', sans-serif;
-            padding: 20px;
-        }
-        
-        .mobile-warning-container {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 25px;
-            padding: 35px 30px;
-            text-align: center;
-            max-width: 90%;
-            width: 420px;
-            box-shadow: 
-                0 20px 40px rgba(0, 0, 0, 0.1),
-                0 0 0 1px rgba(255, 255, 255, 0.2);
-            animation: fadeInUp 0.8s ease-out, shake 0.8s ease-in-out 1s;
-            position: relative;
             overflow: hidden;
         }
-        
-        .mobile-warning-container::before {
+
+        .mobile-warning-overlay::before {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
-            transform: rotate(45deg);
-            animation: shine 3s ease-in-out infinite;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(90deg, transparent 50%, rgba(255,255,255,0.03) 50%),
+                linear-gradient(transparent 50%, rgba(255,255,255,0.03) 50%);
+            background-size: 50px 50px;
+            animation: matrixRain 20s linear infinite;
+            pointer-events: none;
         }
-        
-        @keyframes shine {
-            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+
+        .stardust-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
         }
-        
-        .warning-icon {
-            font-size: 4.5rem;
-            color: #e74c3c;
-            margin-bottom: 25px;
-            animation: bounce 2s infinite, pulse 2s infinite;
-            display: inline-block;
+
+        .stardust {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            animation: stardustFall linear infinite;
         }
-        
-        .warning-title {
-            font-size: 1.9rem;
-            font-weight: bold;
-            color: #2c3e50;
-            margin-bottom: 20px;
-            font-family: 'Lalezar', cursive;
-            background: linear-gradient(135deg, #e74c3c, #c0392b);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: float 3s ease-in-out infinite;
-        }
-        
-        .warning-message {
-            font-size: 1.15rem;
-            color: #34495e;
-            line-height: 1.7;
-            margin-bottom: 30px;
+
+        .cyber-card {
+            background: rgba(16, 18, 37, 0.85);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(139, 69, 255, 0.3);
+            border-radius: 30px;
+            padding: 45px 35px;
             text-align: center;
-        }
-        
-        .warning-features {
-            background: rgba(52, 152, 219, 0.1);
-            border-radius: 18px;
-            padding: 25px;
-            margin: 25px 0;
-            border-right: 4px solid #3498db;
-        }
-        
-        .feature-item {
-            display: flex;
-            align-items: center;
-            justify-content: right;
-            margin-bottom: 12px;
-            font-size: 1rem;
-            color: #2c3e50;
-            padding: 8px 0;
-        }
-        
-        .feature-item:last-child {
-            margin-bottom: 0;
-        }
-        
-        .feature-icon {
-            color: #27ae60;
-            margin-left: 12px;
-            font-size: 1.2rem;
-            animation: bounce 2s infinite 1s;
-        }
-        
-        .warning-countdown {
-            font-size: 1.1rem;
-            color: #e74c3c;
-            font-weight: bold;
-            margin: 20px 0;
-            padding: 12px;
-            background: rgba(231, 76, 60, 0.1);
-            border-radius: 12px;
-            animation: pulse 2s infinite;
-            border: 2px dashed rgba(231, 76, 60, 0.3);
-        }
-        
-        .warning-actions {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin-top: 30px;
-        }
-        
-        .warning-btn {
-            padding: 16px 35px;
-            border: none;
-            border-radius: 18px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Vazirmatn', sans-serif;
+            max-width: 90%;
+            width: 480px;
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(139, 69, 255, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            animation: cyberSlideIn 1.2s cubic-bezier(0.23, 1, 0.32, 1), hologramFlicker 3s ease-in-out infinite;
             position: relative;
             overflow: hidden;
-            min-width: 150px;
         }
-        
-        .warning-btn::before {
+
+        .cyber-card::before {
             content: '';
             position: absolute;
             top: 0;
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            transition: left 0.5s;
+            background: linear-gradient(90deg, transparent, rgba(139, 69, 255, 0.1), transparent);
+            animation: shine 3s ease-in-out infinite;
         }
-        
-        .warning-btn:hover::before {
-            left: 100%;
+
+        @keyframes shine {
+            0% { left: -100%; }
+            100% { left: 100%; }
         }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, #e74c3c, #c0392b);
-            color: white;
-            box-shadow: 0 5px 20px rgba(231, 76, 60, 0.4);
+
+        .cyber-card::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #8b45ff, #ff69b4, #40e0d0, #8b45ff);
+            border-radius: 32px;
+            z-index: -1;
+            animation: quantumPulse 4s linear infinite;
         }
-        
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(231, 76, 60, 0.6);
+
+        .hologram-icon {
+            font-size: 5.5rem;
+            margin-bottom: 30px;
+            display: inline-block;
+            background: linear-gradient(135deg, #8b45ff, #ff69b4, #40e0d0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% 200%;
+            animation: cosmicFloat 4s ease-in-out infinite, nebulaGlow 6s ease infinite;
+            filter: drop-shadow(0 0 20px rgba(139, 69, 255, 0.5));
         }
-        
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: rgba(236, 240, 241, 0.5);
-            border-radius: 4px;
-            margin: 25px 0;
+
+        .cyber-title {
+            font-size: 2.3rem;
+            font-weight: bold;
+            margin-bottom: 25px;
+            font-family: 'Lalezar', cursive;
+            background: linear-gradient(135deg, #8b45ff, #ff69b4, #40e0d0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% 200%;
+            animation: nebulaGlow 4s ease infinite;
+            text-shadow: 0 0 30px rgba(139, 69, 255, 0.3);
+            position: relative;
+        }
+
+        .cyber-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 25%;
+            width: 50%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #8b45ff, #ff69b4, transparent);
+            border-radius: 2px;
+        }
+
+        .cyber-message {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.8;
+            margin-bottom: 35px;
+            text-align: center;
+            font-weight: 300;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(139, 69, 255, 0.2);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: right;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            position: relative;
             overflow: hidden;
         }
-        
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #e74c3c, #c0392b);
-            border-radius: 4px;
-            animation: progress 8s linear forwards;
+
+        .feature-card:hover {
+            transform: translateX(-10px);
+            border-color: rgba(139, 69, 255, 0.5);
+            box-shadow: 0 10px 30px rgba(139, 69, 255, 0.2);
         }
-        
-        @keyframes progress {
-            0% { width: 100%; }
-            100% { width: 0%; }
-        }
-        
-        .floating-elements {
+
+        .feature-card::before {
+            content: '';
             position: absolute;
-            width: 100%;
-            height: 100%;
             top: 0;
             left: 0;
-            pointer-events: none;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, #8b45ff, #ff69b4);
         }
-        
-        .floating-element {
+
+        .feature-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .feature-text {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+            font-weight: 400;
+        }
+
+        .feature-icon {
+            font-size: 1.4rem;
+            margin-left: 15px;
+            background: linear-gradient(135deg, #8b45ff, #ff69b4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: cosmicFloat 3s ease-in-out infinite;
+        }
+
+        .status-panel {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(64, 224, 208, 0.3);
+            border-radius: 20px;
+            padding: 20px;
+            margin: 25px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .status-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            background: #40e0d0;
+            border-radius: 50%;
+            animation: quantumPulse 2s ease-in-out infinite;
+            box-shadow: 0 0 20px #40e0d0;
+        }
+
+        .status-text {
+            color: #40e0d0;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .quantum-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #8b45ff, #ff69b4, #40e0d0);
+            border-radius: 4px;
+            animation: progress 6s ease-in-out infinite;
+            position: relative;
+        }
+
+        @keyframes progress {
+            0% { width: 0%; }
+            50% { width: 100%; }
+            100% { width: 0%; }
+        }
+
+        .cyber-actions {
+            display: flex;
+            justify-content: center;
+            margin-top: 35px;
+        }
+
+        .cyber-btn {
+            padding: 18px 45px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            font-family: 'Vazirmatn', sans-serif;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #8b45ff, #ff69b4);
+            color: white;
+            box-shadow: 
+                0 10px 30px rgba(139, 69, 255, 0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+        }
+
+        .cyber-btn::before {
+            content: '';
             position: absolute;
-            font-size: 1.8rem;
-            opacity: 0.15;
-            animation: float 8s ease-in-out infinite;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.6s;
         }
-        
-        .floating-element:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
-        .floating-element:nth-child(2) { top: 20%; right: 15%; animation-delay: 2s; }
-        .floating-element:nth-child(3) { bottom: 30%; left: 20%; animation-delay: 4s; }
-        .floating-element:nth-child(4) { bottom: 15%; right: 25%; animation-delay: 6s; }
-        .floating-element:nth-child(5) { top: 40%; left: 30%; animation-delay: 1s; }
-        .floating-element:nth-child(6) { top: 60%; right: 10%; animation-delay: 3s; }
-        
-        .contact-info {
-            margin-top: 20px;
+
+        .cyber-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 
+                0 15px 40px rgba(139, 69, 255, 0.6),
+                0 0 20px rgba(255, 105, 180, 0.4);
+        }
+
+        .cyber-btn:hover::before {
+            left: 100%;
+        }
+
+        .cyber-btn:active {
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        .contact-badge {
+            margin-top: 25px;
             padding: 15px;
-            background: rgba(52, 152, 219, 0.08);
-            border-radius: 12px;
-            border-right: 3px solid #3498db;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 105, 180, 0.3);
+            border-radius: 15px;
+            text-align: center;
         }
-        
+
         .contact-text {
+            color: rgba(255, 255, 255, 0.7);
             font-size: 0.95rem;
-            color: #2c3e50;
             margin-bottom: 8px;
         }
-        
+
         .contact-email {
-            font-size: 1rem;
-            color: #e74c3c;
-            font-weight: bold;
+            font-size: 1.1rem;
+            color: #ff69b4;
+            font-weight: 600;
             direction: ltr;
-            display: inline-block;
+            text-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
         }
-        
+
         @media (max-width: 480px) {
-            .mobile-warning-container {
-                padding: 30px 20px;
-                margin: 15px;
+            .cyber-card {
+                padding: 35px 25px;
+                margin: 20px;
             }
-            
-            .warning-icon {
-                font-size: 3.5rem;
+
+            .hologram-icon {
+                font-size: 4.5rem;
             }
-            
-            .warning-title {
-                font-size: 1.6rem;
+
+            .cyber-title {
+                font-size: 2rem;
             }
-            
-            .warning-message {
-                font-size: 1.05rem;
+
+            .cyber-message {
+                font-size: 1.1rem;
             }
-            
-            .warning-features {
-                padding: 20px 15px;
-            }
-            
-            .feature-item {
-                font-size: 0.95rem;
-            }
-            
-            .warning-btn {
-                padding: 14px 25px;
-                font-size: 1rem;
-                min-width: 130px;
+
+            .cyber-btn {
+                padding: 16px 35px;
+                font-size: 1.1rem;
             }
         }
     `;
     
     document.head.appendChild(style);
 
-    // ایجاد المان‌های overlay و container
+    // ایجاد المان‌های overlay
     const overlay = document.createElement('div');
     overlay.id = 'mobileWarningOverlay';
     overlay.className = 'mobile-warning-overlay';
     
-    overlay.innerHTML = `
-        <div class="floating-elements">
-            <div class="floating-element">📱</div>
-            <div class="floating-element">🚫</div>
-            <div class="floating-element">⚡</div>
-            <div class="floating-element">🔧</div>
-            <div class="floating-element">💻</div>
-            <div class="floating-element">📵</div>
-        </div>
-        
-        <div class="mobile-warning-container">
-            <div class="warning-icon">
-                📵
+    // ایجاد ستاره‌های در حال بارش
+    const stardustContainer = document.createElement('div');
+    stardustContainer.className = 'stardust-container';
+    
+    for (let i = 0; i < 50; i++) {
+        const stardust = document.createElement('div');
+        stardust.className = 'stardust';
+        stardust.style.left = Math.random() * 100 + '%';
+        stardust.style.animationDelay = Math.random() * 15 + 's';
+        stardust.style.animationDuration = (Math.random() * 10 + 5) + 's';
+        stardustContainer.appendChild(stardust);
+    }
+    
+    overlay.appendChild(stardustContainer);
+    
+    overlay.innerHTML += `
+        <div class="cyber-card">
+            <div class="hologram-icon">
+                🚫
             </div>
             
-            <h1 class="warning-title">
-                دسترسی با موبایل محدود شده است
+            <h1 class="cyber-title">
+                دسترسی موبایل محدود شده
             </h1>
             
-            <div class="warning-message">
-                متأسفانه در حال حاضر امکان دسترسی به سایت از طریق دستگاه‌های همراه وجود ندارد. تیم فنی در حال رفع مشکلات فنی می‌باشد.
+            <div class="cyber-message">
+                در حال حاضر دسترسی از طریق دستگاه‌های همراه به دلیل بهینه‌سازی در دسترس نیست
             </div>
             
-            <div class="warning-features">
-                <div class="feature-item">
-                    <span class="feature-icon">✅</span>
-                    به زودی نسخه موبایل منتشر خواهد شد
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-content">
+                        <span class="feature-text">بهینه‌سازی رابط کاربری موبایل</span>
+                        <span class="feature-icon">⚡</span>
+                    </div>
                 </div>
-                <div class="feature-item">
-                    <span class="feature-icon">✅</span>
-                    رفع باگ‌های مربوط به نمایش در موبایل
+                <div class="feature-card">
+                    <div class="feature-content">
+                        <span class="feature-text">رفع باگ‌های نمایشی</span>
+                        <span class="feature-icon">🔧</span>
+                    </div>
                 </div>
-                <div class="feature-item">
-                    <span class="feature-icon">✅</span>
-                    بهبود تجربه کاربری در دستگاه‌های همراه
+                <div class="feature-card">
+                    <div class="feature-content">
+                        <span class="feature-text">بهبود عملکرد و سرعت</span>
+                        <span class="feature-icon">🚀</span>
+                    </div>
                 </div>
             </div>
             
-            <div class="contact-info">
-                <div class="contact-text">برای اطلاعات بیشتر با پشتیبانی تماس بگیرید:</div>
-                <div class="contact-email">support@matane.com</div>
+            <div class="status-panel">
+                <div class="status-header">
+                    <div class="status-indicator"></div>
+                    <div class="status-text" id="statusMessage">در حال بروزرسانی سیستم...</div>
+                </div>
+                <div class="progress-container">
+                    <div class="quantum-progress"></div>
+                </div>
             </div>
             
-            <div class="warning-countdown" id="countdown">
-                ⏰ در حال بروزرسانی...
+            <div class="contact-badge">
+                <div class="contact-text">برای اطلاعات بیشتر با ما در تماس باشید</div>
+                <div class="contact-email">support@matane.ir</div>
             </div>
             
-            <div class="progress-bar">
-                <div class="progress-fill"></div>
-            </div>
-            
-            <div class="warning-actions">
-                <button class="warning-btn btn-primary" onclick="closeMobileWarning()">
-                    <i class="fas fa-check-circle"></i>
+            <div class="cyber-actions">
+                <button class="cyber-btn" onclick="closeMobileWarning()">
+                    <i class="fas fa-rocket"></i>
                     متوجه شدم
                 </button>
             </div>
@@ -3764,54 +3939,55 @@ function showMobileWarning() {
     `;
     
     document.body.appendChild(overlay);
-    
-    // غیرفعال کردن اسکرول
     document.body.style.overflow = 'hidden';
     
-    // شمارش معکوس نمایشی
-    startCountdown();
+    // به‌روزرسانی وضعیت به صورت پویا
+    updateStatusMessages();
 }
 
-// تابع شمارش معکوس
-function startCountdown() {
-    const countdownElement = document.getElementById('countdown');
+// تابع به‌روزرسانی پیام‌های وضعیت
+function updateStatusMessages() {
+    const statusElement = document.getElementById('statusMessage');
     const messages = [
-        "🔄 در حال بروزرسانی...",
-        "⚡ بهینه سازی برای موبایل",
-        "🔧 رفع باگ‌های فنی",
-        "🎨 بهبود طراحی رابط کاربری",
-        "🚀 آماده سازی نسخه موبایل"
+        "🔍 بررسی عملکرد موبایل...",
+        "⚡ بهینه‌سازی رابط کاربری...",
+        "🎨 بهبود تجربه کاربری...",
+        "🚀 افزایش سرعت لود...",
+        "🔧 رفع باگ‌های فنی...",
+        "📱 تست نسخه موبایل...",
+        "✅ آماده‌سازی برای انتشار..."
     ];
     
     let currentIndex = 0;
     
     const messageInterval = setInterval(() => {
-        countdownElement.innerHTML = messages[currentIndex];
-        currentIndex = (currentIndex + 1) % messages.length;
+        if (statusElement) {
+            statusElement.textContent = messages[currentIndex];
+            currentIndex = (currentIndex + 1) % messages.length;
+        }
     }, 2000);
     
-    // توقف اتوماتیک بعد از 15 ثانیه
+    // توقف بعد از 20 ثانیه
     setTimeout(() => {
         clearInterval(messageInterval);
-        countdownElement.innerHTML = "✅ به زودی در دسترس خواهد شد";
-        countdownElement.style.background = "rgba(46, 204, 113, 0.1)";
-        countdownElement.style.color = "#27ae60";
-        countdownElement.style.border = "2px dashed rgba(46, 204, 113, 0.3)";
-    }, 15000);
+        if (statusElement) {
+            statusElement.textContent = "✅ به زودی در دسترس خواهد بود";
+        }
+    }, 20000);
 }
 
-// تابع بستن پیام
+// تابع بستن پیام با انیمیشن زیبا
 function closeMobileWarning() {
     const overlay = document.getElementById('mobileWarningOverlay');
     const styles = document.getElementById('mobile-warning-styles');
     
     if (overlay) {
-        // انیمیشن خروج
-        overlay.style.animation = 'fadeOut 0.6s ease-in-out forwards';
+        overlay.style.animation = 'cyberSlideOut 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards';
+        
         setTimeout(() => {
             overlay.remove();
             document.body.style.overflow = 'auto';
-        }, 600);
+        }, 800);
     }
     
     if (styles) {
@@ -3821,41 +3997,41 @@ function closeMobileWarning() {
     }
 }
 
-// تابع اصلی برای تشخیص موبایل و نمایش هشدار
+// اضافه کردن استایل خروج
+const exitStyle = document.createElement('style');
+exitStyle.innerHTML = `
+    @keyframes cyberSlideOut {
+        0% {
+            opacity: 1;
+            transform: translateY(0) perspective(1000px) rotateX(0) scale(1);
+            filter: blur(0);
+        }
+        100% {
+            opacity: 0;
+            transform: translateY(-100px) perspective(1000px) rotateX(-45deg) scale(0.8);
+            filter: blur(20px);
+        }
+    }
+`;
+document.head.appendChild(exitStyle);
+
+// تابع اصلی برای تشخیص موبایل
 function checkMobileAndShowWarning() {
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     const viewportWidth = window.innerWidth;
     
     if (isMobile || viewportWidth < 768) {
-        // تاخیر برای بهتر شدن تجربه کاربر
-        setTimeout(showMobileWarning, 800);
+        setTimeout(showMobileWarning, 500);
         return true;
     }
     return false;
 }
 
-// اضافه کردن استایل fadeOut
-const fadeOutStyle = document.createElement('style');
-fadeOutStyle.innerHTML = `
-    @keyframes fadeOut {
-        from {
-            opacity: 1;
-            transform: scale(1) translateY(0);
-        }
-        to {
-            opacity: 0;
-            transform: scale(0.7) translateY(50px);
-        }
-    }
-`;
-document.head.appendChild(fadeOutStyle);
-
-// اجرای تابع هنگام لود صفحه
+// اجرای خودکار
 document.addEventListener('DOMContentLoaded', function() {
     setTimeout(checkMobileAndShowWarning, 300);
 });
 
-// برای زمانی که کاربر صفحه را می‌چرخاند
 window.addEventListener('orientationchange', function() {
     setTimeout(checkMobileAndShowWarning, 400);
 });
