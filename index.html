@@ -3387,58 +3387,143 @@
             }, 10000);
         });
 
-
-    function checkMobileDevice() {
+    function optimizeForMobile() {
     // تشخیص دستگاه موبایل
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    const screenWidth = window.innerWidth;
+    const viewportWidth = window.innerWidth;
     
-    // اگر موبایل باشد یا صفحه کوچک باشد
-    if (isMobile || screenWidth < 768) {
-        showMobileWarning();
+    // اگر موبایل باشد یا عرض صفحه کمتر از 768px باشد
+    if (isMobile || viewportWidth < 768) {
+        applyMobileStyles();
         return true;
     }
     return false;
 }
 
-function showMobileWarning() {
-    // ایجاد پیام هشدار
-    const warningDiv = document.createElement('div');
-    warningDiv.innerHTML = `
-        <div style="
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background: #ffeb3b;
-            color: #333;
-            padding: 15px;
-            text-align: center;
-            font-family: Arial, sans-serif;
-            font-size: 14px;
-            z-index: 9999;
-            border-bottom: 2px solid #ffc107;
-        ">
-            ⚠️ این سایت برای نمایش در موبایل بهینه‌سازی نشده است. برای تجربه بهتر از دسکتاپ استفاده کنید.
-            <button onclick="this.parentElement.remove()" style="
-                margin-left: 10px;
-                background: #ff9800;
-                color: white;
-                border: none;
-                padding: 5px 10px;
-                border-radius: 3px;
-                cursor: pointer;
-            ">متوجه شدم</button>
-        </div>
+function applyMobileStyles() {
+    // اضافه کردن استایل‌های موبایل
+    const style = document.createElement('style');
+    style.id = 'mobile-styles';
+    style.innerHTML = `
+        /* تغییرات اصلی برای موبایل */
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            transform: scale(0.95);
+            transform-origin: top center;
+            width: 100% !important;
+            max-width: 100% !important;
+            overflow-x: hidden !important;
+            font-size: 14px !important;
+        }
+        
+        /* تغییر سایز تایتل‌ها */
+        h1 { font-size: 24px !important; }
+        h2 { font-size: 20px !important; }
+        h3 { font-size: 18px !important; }
+        h4 { font-size: 16px !important; }
+        h5 { font-size: 14px !important; }
+        
+        /* تغییر سایز متن‌ها */
+        p, span, div, li {
+            font-size: 14px !important;
+            line-height: 1.4 !important;
+        }
+        
+        /* تغییر سایز تصاویر */
+        img {
+            max-width: 100% !important;
+            height: auto !important;
+        }
+        
+        /* تغییر سایز کانتینرها */
+        .container, .wrapper, .content {
+            width: 100% !important;
+            max-width: 100% !important;
+            padding: 10px !important;
+            margin: 0 auto !important;
+        }
+        
+        /* تغییر سایز دکمه‌ها */
+        button, .btn, input[type="button"], input[type="submit"] {
+            font-size: 16px !important;
+            padding: 12px 20px !important;
+            min-height: 44px !important;
+        }
+        
+        /* تغییر سایز inputها */
+        input, textarea, select {
+            font-size: 16px !important;
+            padding: 10px !important;
+        }
+        
+        /* تغییر layout برای موبایل */
+        .row, .flex-row {
+            flex-direction: column !important;
+        }
+        
+        .col, .flex-col {
+            width: 100% !important;
+            margin-bottom: 15px !important;
+        }
+        
+        /* مخفی کردن المان‌های غیرضروری در موبایل */
+        .desktop-only, .hide-on-mobile {
+            display: none !important;
+        }
+        
+        /* نمایش المان‌های مخصوص موبایل */
+        .mobile-only {
+            display: block !important;
+        }
     `;
     
-    document.body.prepend(warningDiv);
+    // حذف استایل قبلی اگر وجود داشته باشد
+    const existingStyle = document.getElementById('mobile-styles');
+    if (existingStyle) {
+        existingStyle.remove();
+    }
+    
+    document.head.appendChild(style);
+    
+    // اعمال تغییرات اضافی
+    adjustLayoutForMobile();
 }
 
-// اجرای تابع هنگام لود صفحه
-document.addEventListener('DOMContentLoaded', checkMobileDevice);
-// اجرای تابع هنگام تغییر سایز صفحه
-window.addEventListener('resize', checkMobileDevice);
+function adjustLayoutForMobile() {
+    // تغییر viewport meta tag برای کنترل بهتر
+    let viewportMeta = document.querySelector('meta[name="viewport"]');
+    if (!viewportMeta) {
+        viewportMeta = document.createElement('meta');
+        viewportMeta.name = 'viewport';
+        document.head.appendChild(viewportMeta);
+    }
+    viewportMeta.content = 'width=device-width, initial-scale=0.9, maximum-scale=1.0, user-scalable=yes';
+    
+    // اضافه کردن کلاس به body برای استایل‌دهی هدفمند
+    document.body.classList.add('mobile-view');
+    
+    // تنظیم مجدد عرض المان‌های خاص
+    const fullWidthElements = document.querySelectorAll('.container, .wrapper, .main-content, header, footer');
+    fullWidthElements.forEach(el => {
+        el.style.width = '100%';
+        el.style.maxWidth = '100%';
+        el.style.paddingLeft = '10px';
+        el.style.paddingRight = '10px';
+    });
+    
+    // تنظیم سایز فونت برای المان‌های خاص
+    const textElements = document.querySelectorAll('p, span, div, li, a');
+    textElements.forEach(el => {
+        const currentSize = parseInt(window.getComputedStyle(el).fontSize);
+        if (currentSize > 16) {
+            el.style.fontSize = '14px';
+        }
+    });
+}
+    
 
 
     </script>
