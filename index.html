@@ -4067,7 +4067,1030 @@ if (originalLoginUser) {
     };
 }
     
+// تابع برای نمایش کاربران دارای چت در موبایل
+function initMobileChatUsers() {
+    if (!document.getElementById('chatContainer') || 
+        document.getElementById('chatContainer').style.display === 'none') {
+        return false;
+    }
 
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    const viewportWidth = window.innerWidth;
+    
+    if ((isMobile || viewportWidth < 768) && window.currentUserData) {
+        createMobileChatUsersPanel();
+        return true;
+    }
+    return false;
+}
+
+function createMobileChatUsersPanel() {
+    // حذف المان‌های قبلی اگر وجود دارند
+    const existingElements = [
+        'mobileChatUsersPanel',
+        'mobileChatUsersOverlay',
+        'mobileChatUsersBtn'
+    ];
+    
+    existingElements.forEach(id => {
+        const element = document.getElementById(id);
+        if (element) element.remove();
+    });
+
+    // اضافه کردن استایل‌ها
+    const style = document.createElement('style');
+    style.id = 'mobile-chat-users-styles';
+    style.innerHTML = `
+        .mobile-chat-users-panel {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 90%;
+            height: 100%;
+            background: white;
+            z-index: 1002;
+            transition: right 0.3s ease;
+            box-shadow: -5px 0 15px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .mobile-chat-users-panel.active {
+            right: 0;
+        }
+        
+        .mobile-chat-users-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1001;
+            display: none;
+        }
+        
+        .mobile-chat-users-overlay.active {
+            display: block;
+        }
+        
+        .mobile-chat-users-header {
+            padding: 20px 15px;
+            background: linear-gradient(90deg, #4776E6 0%, #8E54E9 100%);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Lalezar', cursive;
+        }
+        
+        .mobile-chat-users-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.3rem;
+            cursor: pointer;
+            padding: 5px;
+        }
+        
+        .mobile-chat-users-content {
+            flex: 1;
+            overflow-y: auto;
+            background: #f8f9fa;
+            padding: 10px;
+        }
+        
+        .mobile-chat-users-btn {
+            position: fixed;
+            top: 140px;
+            right: 20px;
+            background: linear-gradient(90deg, #4776E6 0%, #8E54E9 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(71, 118, 230, 0.3);
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+        
+        .mobile-chat-users-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .chat-user-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .chat-user-item:hover {
+            transform: translateX(-5px);
+            border-color: #4776E6;
+        }
+        
+        .chat-user-item.active {
+            background: #e3f2fd;
+            border-color: #4776E6;
+        }
+        
+        .chat-user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4776E6 0%, #8E54E9 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-left: 15px;
+            flex-shrink: 0;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .chat-user-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .chat-user-name {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .chat-user-last-message {
+            font-size: 13px;
+            color: #666;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .chat-user-time {
+            font-size: 11px;
+            color: #999;
+            text-align: left;
+        }
+        
+        .chat-user-badge {
+            background: #e74c3c;
+            color: white;
+            border-radius: 10px;
+            padding: 2px 8px;
+            font-size: 11px;
+            margin-right: 5px;
+        }
+        
+        .no-chats-message {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+        
+        .no-chats-message i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-chat-users-btn {
+                display: flex !important;
+            }
+        }
+    `;
+    
+    if (!document.getElementById('mobile-chat-users-styles')) {
+        document.head.appendChild(style);
+    }
+
+    // ایجاد پنل کاربران دارای چت
+    const panel = document.createElement('div');
+    panel.id = 'mobileChatUsersPanel';
+    panel.className = 'mobile-chat-users-panel';
+    panel.innerHTML = `
+        <div class="mobile-chat-users-header">
+            <h3 style="margin: 0; font-size: 1.3rem;">💬 چت‌های اخیر</h3>
+            <button class="mobile-chat-users-close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="mobile-chat-users-content" id="mobileChatUsersContent">
+            <div class="no-chats-message">
+                <i class="fas fa-comments"></i>
+                <p>هنوز چتی ندارید</p>
+            </div>
+        </div>
+    `;
+
+    // ایجاد overlay
+    const overlay = document.createElement('div');
+    overlay.id = 'mobileChatUsersOverlay';
+    overlay.className = 'mobile-chat-users-overlay';
+
+    // ایجاد دکمه
+    const button = document.createElement('button');
+    button.id = 'mobileChatUsersBtn';
+    button.className = 'mobile-chat-users-btn';
+    button.innerHTML = '<i class="fas fa-comment-dots"></i>';
+    button.title = 'چت‌های اخیر';
+
+    // اضافه کردن به صفحه
+    document.body.appendChild(panel);
+    document.body.appendChild(overlay);
+    document.body.appendChild(button);
+
+    // رویدادهای کلیک
+    button.addEventListener('click', function() {
+        panel.classList.add('active');
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        loadChatUsersList();
+    });
+
+    overlay.addEventListener('click', closeChatUsersPanel);
+    
+    const closeBtn = panel.querySelector('.mobile-chat-users-close');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeChatUsersPanel);
+    }
+
+    function closeChatUsersPanel() {
+        panel.classList.remove('active');
+        overlay.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+
+    // تابع برای بارگذاری لیست کاربران دارای چت
+    function loadChatUsersList() {
+        const content = document.getElementById('mobileChatUsersContent');
+        if (!content || !window.currentUserData) return;
+
+        const currentUser = window.currentUserData.username;
+        const chatUsers = getUsersWithChats(currentUser);
+        
+        if (chatUsers.length === 0) {
+            content.innerHTML = `
+                <div class="no-chats-message">
+                    <i class="fas fa-comments"></i>
+                    <h4>هنوز چتی ندارید</h4>
+                    <p>برای شروع گفتگو، کاربری را از لیست کاربران انتخاب کنید</p>
+                </div>
+            `;
+            return;
+        }
+
+        let html = '';
+        chatUsers.forEach(chatUser => {
+            const lastMessage = getLastMessage(currentUser, chatUser.username);
+            const unreadCount = getUnreadCount(currentUser, chatUser.username);
+            const isOnline = window.isUserOnline(chatUser.username);
+            
+            html += `
+                <div class="chat-user-item" data-username="${chatUser.username}">
+                    <div class="chat-user-avatar" id="chat-user-avatar-${chatUser.username}">
+                        ${window.generateAvatar(chatUser.name)}
+                    </div>
+                    <div class="chat-user-info">
+                        <div class="chat-user-name">
+                            ${window.sanitizeInput(chatUser.name)}
+                            ${window.isUserVerified(chatUser.username) ? 
+                                '<span class="verified-text"><span class="verified-badge-telegram"><i class="fas fa-check"></i></span></span>' : ''}
+                            ${isOnline ? '<span style="color:#4CAF50; font-size:10px;">●</span>' : ''}
+                            ${unreadCount > 0 ? `<span class="chat-user-badge">${unreadCount}</span>` : ''}
+                        </div>
+                        <div class="chat-user-last-message">
+                            ${lastMessage ? formatLastMessage(lastMessage) : 'شروع گفتگو'}
+                        </div>
+                    </div>
+                    ${lastMessage ? `
+                        <div class="chat-user-time">
+                            ${formatTime(lastMessage.timestamp)}
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        });
+
+        content.innerHTML = html;
+
+        // بارگذاری آواتارها
+        chatUsers.forEach(chatUser => {
+            const avatarElement = document.getElementById(`chat-user-avatar-${chatUser.username}`);
+            if (avatarElement && window.userAvatars && window.userAvatars[chatUser.username]) {
+                avatarElement.style.backgroundImage = `url(${window.userAvatars[chatUser.username]})`;
+                avatarElement.innerHTML = '';
+            }
+        });
+
+        // اضافه کردن event listener برای آیتم‌ها
+        const chatItems = content.querySelectorAll('.chat-user-item');
+        chatItems.forEach(item => {
+            item.addEventListener('click', function() {
+                const username = this.getAttribute('data-username');
+                const user = window.users.find(u => u.username === username);
+                if (user && window.selectUser) {
+                    window.selectUser(user);
+                    closeChatUsersPanel();
+                }
+            });
+        });
+    }
+
+    // تابع برای گرفتن کاربرانی که با آنها چت داشته‌اید
+    function getUsersWithChats(currentUsername) {
+        const chatUsers = [];
+        
+        window.users.forEach(user => {
+            if (user.username !== currentUsername && !window.isUserBanned(user.username)) {
+                const chatKey = window.getChatKey(currentUsername, user.username);
+                const messages = JSON.parse(localStorage.getItem(chatKey)) || [];
+                
+                if (messages.length > 0) {
+                    chatUsers.push({
+                        username: user.username,
+                        name: user.name,
+                        lastMessage: messages[messages.length - 1],
+                        messageCount: messages.length
+                    });
+                }
+            }
+        });
+        
+        // مرتب‌سازی بر اساس آخرین پیام
+        chatUsers.sort((a, b) => {
+            const timeA = a.lastMessage ? new Date(a.lastMessage.timestamp).getTime() : 0;
+            const timeB = b.lastMessage ? new Date(b.lastMessage.timestamp).getTime() : 0;
+            return timeB - timeA;
+        });
+        
+        return chatUsers;
+    }
+
+    // تابع برای گرفتن آخرین پیام
+    function getLastMessage(user1, user2) {
+        const chatKey = window.getChatKey(user1, user2);
+        const messages = JSON.parse(localStorage.getItem(chatKey)) || [];
+        return messages.length > 0 ? messages[messages.length - 1] : null;
+    }
+
+    // تابع برای گرفتن تعداد پیام‌های خوانده نشده
+    function getUnreadCount(currentUser, otherUser) {
+        // در این نسخه ساده، همه پیام‌ها خوانده شده در نظر گرفته می‌شوند
+        // می‌توانید این تابع را بر اساس نیاز خود توسعه دهید
+        return 0;
+    }
+
+    // تابع برای فرمت کردن آخرین پیام
+    function formatLastMessage(message) {
+        if (message.text) {
+            return message.text.length > 30 ? message.text.substring(0, 30) + '...' : message.text;
+        } else if (message.media) {
+            switch (message.media.type) {
+                case 'image': return '📷 عکس';
+                case 'video': return '🎥 ویدیو';
+                case 'audio': return '🎵 صوت';
+                case 'file': return '📎 فایل';
+                default: return '📎 مدیا';
+            }
+        }
+        return 'پیام جدید';
+    }
+
+    // تابع برای فرمت کردن زمان
+    function formatTime(timestamp) {
+        const date = new Date(timestamp);
+        const now = new Date();
+        const diff = now - date;
+        
+        if (diff < 24 * 60 * 60 * 1000) {
+            // امروز
+            return date.toLocaleTimeString('fa-IR', { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+        } else if (diff < 7 * 24 * 60 * 60 * 1000) {
+            // این هفته
+            return date.toLocaleDateString('fa-IR', { 
+                weekday: 'short' 
+            });
+        } else {
+            // قدیمی‌تر
+            return date.toLocaleDateString('fa-IR', { 
+                month: 'short', 
+                day: 'numeric' 
+            });
+        }
+    }
+
+    // اولین بار لیست را بارگذاری کن
+    loadChatUsersList();
+}
+
+// اضافه کردن به سیستم اصلی
+document.addEventListener('DOMContentLoaded', function() {
+    // مشاهده تغییرات در نمایش chatContainer
+    const chatContainer = document.getElementById('chatContainer');
+    if (chatContainer) {
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+                    if (chatContainer.style.display === 'flex') {
+                        setTimeout(initMobileChatUsers, 100);
+                    } else {
+                        // پاک کردن المان‌ها وقتی کاربر لاگاوت می‌کند
+                        ['mobileChatUsersPanel', 'mobileChatUsersOverlay', 'mobileChatUsersBtn'].forEach(id => {
+                            const element = document.getElementById(id);
+                            if (element) element.remove();
+                        });
+                    }
+                }
+            });
+        });
+        
+        observer.observe(chatContainer, { attributes: true });
+    }
+});
+
+// برای تغییر سایز صفحه
+window.addEventListener('resize', function() {
+    if (document.getElementById('chatContainer') && 
+        document.getElementById('chatContainer').style.display === 'flex') {
+        initMobileChatUsers();
+    }
+});
+
+// اضافه کردن به تابع loginUser
+// این قسمت رو به تابع loginUser اصلی اضافه کن:
+async function loginUser(user) {
+    // کدهای موجود...
+    
+    // اضافه کردن این خط به انتهای تابع:
+    setTimeout(initMobileChatUsers, 150);
+}
+
+
+async function loginUser(user) {
+    if (!user || !user.username) {
+        showError('خطا در اطلاعات کاربر');
+        return;
+    }
+    
+    currentUserData = user;
+    
+    if (!onlineUsers.includes(user.username)) {
+        onlineUsers.push(user.username);
+        localStorage.setItem('onlineUsers', JSON.stringify(onlineUsers));
+    }
+    
+    if (userProfiles[user.username]) {
+        userProfiles[user.username].lastSeen = new Date().toISOString();
+        localStorage.setItem('userProfiles', JSON.stringify(userProfiles));
+    }
+    
+    loadUserAvatar(user.username, userAvatar);
+    
+    authContainer.style.display = 'none';
+    chatContainer.style.display = 'flex';
+    messageInput.focus();
+    
+    updateLoginAttempts(user.username, true);
+    updateVerifiedDisplay();
+    loadUsersList();
+    loadProfileData();
+    
+    // فعال کردن پنل موبایل بعد از لاگین
+    setTimeout(initMobileUsersPanel, 100);
+}
+
+// تابع مدیریت پنل کاربران در موبایل
+function initMobileUsersPanel() {
+    // فقط در صفحه چت و برای موبایل فعال شود
+    if (!document.getElementById('chatContainer') || 
+        document.getElementById('chatContainer').style.display === 'none') {
+        return false;
+    }
+
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    const viewportWidth = window.innerWidth;
+    
+    if ((isMobile || viewportWidth < 768) && !document.getElementById('mobileUsersPanel')) {
+        createMobileUsersPanel();
+        return true;
+    }
+    return false;
+}
+
+function createMobileUsersPanel() {
+    // اگر از قبل وجود دارد، حذف کن
+    const existingPanel = document.getElementById('mobileUsersPanel');
+    const existingOverlay = document.getElementById('mobileUsersOverlay');
+    const existingMenuBtn = document.getElementById('mobileMenuBtn');
+    
+    if (existingPanel) existingPanel.remove();
+    if (existingOverlay) existingOverlay.remove();
+    if (existingMenuBtn) existingMenuBtn.remove();
+
+    // اضافه کردن استایل‌های مخصوص موبایل
+    const style = document.createElement('style');
+    style.id = 'mobile-users-styles';
+    style.innerHTML = `
+        .mobile-users-panel {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 85%;
+            height: 100%;
+            background: white;
+            z-index: 1000;
+            transition: right 0.3s ease;
+            box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .mobile-users-panel.active {
+            right: 0;
+        }
+        
+        .mobile-users-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            display: none;
+        }
+        
+        .mobile-users-overlay.active {
+            display: block;
+        }
+        
+        .mobile-users-header {
+            padding: 20px 15px;
+            background: linear-gradient(90deg, #4776E6 0%, #8E54E9 100%);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Lalezar', cursive;
+        }
+        
+        .mobile-users-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.3rem;
+            cursor: pointer;
+            padding: 5px;
+        }
+        
+        .mobile-users-content {
+            flex: 1;
+            overflow-y: auto;
+            background: #f8f9fa;
+        }
+        
+        .mobile-menu-btn {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: linear-gradient(90deg, #4776E6 0%, #8E54E9 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 998;
+            box-shadow: 0 4px 12px rgba(71, 118, 230, 0.3);
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
+        
+        .mobile-menu-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 15px rgba(71, 118, 230, 0.4);
+        }
+        
+        .mobile-menu-btn.active {
+            display: flex;
+        }
+        
+        @media (max-width: 768px) {
+            .users-panel {
+                display: none !important;
+            }
+            
+            .mobile-menu-btn {
+                display: flex !important;
+            }
+        }
+    `;
+    
+    // اگر استایل از قبل وجود ندارد، اضافه کن
+    if (!document.getElementById('mobile-users-styles')) {
+        document.head.appendChild(style);
+    }
+
+    // ایجاد پنل کاربران موبایل
+    const mobileUsersPanel = document.createElement('div');
+    mobileUsersPanel.id = 'mobileUsersPanel';
+    mobileUsersPanel.className = 'mobile-users-panel';
+    
+    // کپی محتوای پنل کاربران اصلی
+    const originalUsersPanel = document.querySelector('.users-panel');
+    if (originalUsersPanel) {
+        mobileUsersPanel.innerHTML = `
+            <div class="mobile-users-header">
+                <h3 style="margin: 0; font-size: 1.3rem;">👥 کاربران</h3>
+                <button class="mobile-users-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="mobile-users-content">
+                ${originalUsersPanel.innerHTML}
+            </div>
+        `;
+    }
+
+    // ایجاد overlay
+    const overlay = document.createElement('div');
+    overlay.id = 'mobileUsersOverlay';
+    overlay.className = 'mobile-users-overlay';
+
+    // ایجاد دکمه منو
+    const menuBtn = document.createElement('button');
+    menuBtn.id = 'mobileMenuBtn';
+    menuBtn.className = 'mobile-menu-btn';
+    menuBtn.innerHTML = '<i class="fas fa-users"></i>';
+    menuBtn.title = 'نمایش لیست کاربران';
+
+    // اضافه کردن به صفحه
+    document.body.appendChild(mobileUsersPanel);
+    document.body.appendChild(overlay);
+    document.body.appendChild(menuBtn);
+
+    // رویدادهای کلیک
+    menuBtn.addEventListener('click', function() {
+        mobileUsersPanel.classList.add('active');
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        updateMobileUsersList();
+    });
+
+    overlay.addEventListener('click', closeMobilePanel);
+    
+    const closeBtn = mobileUsersPanel.querySelector('.mobile-users-close');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeMobilePanel);
+    }
+
+    // تابع برای بستن پنل
+    function closeMobilePanel() {
+        mobileUsersPanel.classList.remove('active');
+        overlay.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+
+    // تابع برای به‌روزرسانی لیست کاربران در پنل موبایل
+    function updateMobileUsersList() {
+        const mobileUsersList = mobileUsersPanel.querySelector('.users-list');
+        const originalUsersList = document.querySelector('.users-list');
+        
+        if (mobileUsersList && originalUsersList) {
+            mobileUsersList.innerHTML = originalUsersList.innerHTML;
+            
+            // اضافه کردن event listener برای آیتم‌های کاربر در پنل موبایل
+            const userItems = mobileUsersList.querySelectorAll('.user-item');
+            userItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const usernameElement = this.querySelector('.user-username');
+                    if (usernameElement) {
+                        const username = usernameElement.textContent.replace('@', '');
+                        const user = window.users.find(u => u.username === username);
+                        if (user && window.selectUser) {
+                            window.selectUser(user);
+                            closeMobilePanel(); // بستن پنل بعد از انتخاب کاربر
+                        }
+                    }
+                });
+            });
+        }
+    }
+
+    // اولین بار لیست را پر کن
+    updateMobileUsersList();
+}
+
+// اضافه کردن event listener برای لاگین کاربر
+document.addEventListener('DOMContentLoaded', function() {
+    // مشاهده تغییرات در نمایش chatContainer
+    const chatContainer = document.getElementById('chatContainer');
+    if (chatContainer) {
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+                    if (chatContainer.style.display === 'flex') {
+                        // کاربر لاگین کرده، پنل موبایل را فعال کن
+                        setTimeout(initMobileUsersPanel, 100);
+                    } else {
+                        // کاربر لاگین نکرده، پنل موبایل را پاک کن
+                        const mobilePanel = document.getElementById('mobileUsersPanel');
+                        const overlay = document.getElementById('mobileUsersOverlay');
+                        const menuBtn = document.getElementById('mobileMenuBtn');
+                        
+                        if (mobilePanel) mobilePanel.remove();
+                        if (overlay) overlay.remove();
+                        if (menuBtn) menuBtn.remove();
+                    }
+                }
+            });
+        });
+        
+        observer.observe(chatContainer, { attributes: true });
+    }
+});
+
+// همچنین برای تغییر سایز صفحه
+window.addEventListener('resize', function() {
+    if (document.getElementById('chatContainer') && 
+        document.getElementById('chatContainer').style.display === 'flex') {
+        initMobileUsersPanel();
+    }
+});
+
+window.addEventListener('orientationchange', function() {
+    setTimeout(function() {
+        if (document.getElementById('chatContainer') && 
+            document.getElementById('chatContainer').style.display === 'flex') {
+            initMobileUsersPanel();
+        }
+    }, 100);
+});
+
+
+function initMobileUsersPanel() {
+    // تشخیص دستگاه موبایل
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    const viewportWidth = window.innerWidth;
+    
+    if (isMobile || viewportWidth < 768) {
+        createMobileUsersPanel();
+        return true;
+    }
+    return false;
+}
+
+function createMobileUsersPanel() {
+    // اضافه کردن استایل‌های مخصوص موبایل
+    const style = document.createElement('style');
+    style.innerHTML = `
+        /* استایل‌های مخصوص پنل کاربران در موبایل */
+        .mobile-users-panel {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 85%;
+            height: 100%;
+            background: white;
+            z-index: 1000;
+            transition: right 0.3s ease;
+            box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .mobile-users-panel.active {
+            right: 0;
+        }
+        
+        .mobile-users-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            display: none;
+        }
+        
+        .mobile-users-overlay.active {
+            display: block;
+        }
+        
+        .mobile-users-header {
+            padding: 15px;
+            background: linear-gradient(90deg, #4776E6 0%, #8E54E9 100%);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Lalezar', cursive;
+        }
+        
+        .mobile-users-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        
+        .mobile-users-content {
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        .mobile-menu-btn {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            background: linear-gradient(90deg, #4776E6 0%, #8E54E9 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 998;
+            box-shadow: 0 4px 12px rgba(71, 118, 230, 0.3);
+            transition: transform 0.3s ease;
+        }
+        
+        .mobile-menu-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .mobile-menu-btn i {
+            font-size: 1.2rem;
+        }
+        
+        /* مخفی کردن پنل کاربران اصلی در دسکتاپ */
+        @media (max-width: 768px) {
+            .users-panel {
+                display: none !important;
+            }
+            
+            .chat-main {
+                width: 100% !important;
+            }
+            
+            .mobile-menu-btn {
+                display: flex !important;
+            }
+        }
+        
+        /* استایل‌های اضافی برای بهتر شدن نمایش در موبایل */
+        .user-item {
+            padding: 15px !important;
+            border-bottom: 1px solid #f0f0f0 !important;
+        }
+        
+        .user-avatar-small {
+            width: 50px !important;
+            height: 50px !important;
+            margin-left: 15px !important;
+        }
+        
+        .user-name {
+            font-size: 16px !important;
+        }
+        
+        .user-username {
+            font-size: 14px !important;
+        }
+    `;
+    
+    document.head.appendChild(style);
+    
+    // ایجاد پنل کاربران موبایل
+    const mobileUsersPanel = document.createElement('div');
+    mobileUsersPanel.className = 'mobile-users-panel';
+    mobileUsersPanel.innerHTML = `
+        <div class="mobile-users-header">
+            <h3>کاربران</h3>
+            <button class="mobile-users-close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="mobile-users-content">
+            ${document.querySelector('.users-panel').innerHTML}
+        </div>
+    `;
+    
+    // ایجاد overlay
+    const overlay = document.createElement('div');
+    overlay.className = 'mobile-users-overlay';
+    
+    // ایجاد دکمه منو
+    const menuBtn = document.createElement('button');
+    menuBtn.className = 'mobile-menu-btn';
+    menuBtn.innerHTML = '<i class="fas fa-users"></i>';
+    menuBtn.style.display = 'none';
+    
+    // اضافه کردن به صفحه
+    document.body.appendChild(mobileUsersPanel);
+    document.body.appendChild(overlay);
+    document.body.appendChild(menuBtn);
+    
+    // رویدادهای کلیک
+    menuBtn.addEventListener('click', function() {
+        mobileUsersPanel.classList.add('active');
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    });
+    
+    overlay.addEventListener('click', function() {
+        mobileUsersPanel.classList.remove('active');
+        overlay.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    });
+    
+    const closeBtn = mobileUsersPanel.querySelector('.mobile-users-close');
+    closeBtn.addEventListener('click', function() {
+        mobileUsersPanel.classList.remove('active');
+        overlay.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    });
+    
+    // نمایش دکمه منو
+    menuBtn.style.display = 'flex';
+    
+    // به‌روزرسانی لیست کاربران وقتی پنل باز می‌شود
+    const originalLoadUsersList = window.loadUsersList;
+    if (originalLoadUsersList) {
+        window.loadUsersList = function() {
+            originalLoadUsersList();
+            // کپی لیست کاربران به پنل موبایل
+            const mobileUsersList = mobileUsersPanel.querySelector('.users-list');
+            if (mobileUsersList) {
+                mobileUsersList.innerHTML = document.querySelector('.users-list').innerHTML;
+                
+                // اضافه کردن event listener برای آیتم‌های کاربر
+                const userItems = mobileUsersList.querySelectorAll('.user-item');
+                userItems.forEach(item => {
+                    item.addEventListener('click', function() {
+                        // بستن پنل وقتی کاربری انتخاب شد
+                        mobileUsersPanel.classList.remove('active');
+                        overlay.classList.remove('active');
+                        document.body.style.overflow = 'auto';
+                        
+                        // انتخاب کاربر (با استفاده از تابع موجود)
+                        const username = this.querySelector('.user-username').textContent.replace('@', '');
+                        const user = window.users.find(u => u.username === username);
+                        if (user && window.selectUser) {
+                            window.selectUser(user);
+                        }
+                    });
+                });
+            }
+        };
+    }
+    
+    // فراخوانی اولیه برای پر کردن لیست
+    if (window.loadUsersList) {
+        window.loadUsersList();
+    }
+}
+
+// اضافه کردن به رویداد لود صفحه
+document.addEventListener('DOMContentLoaded', function() {
+    initMobileUsersPanel();
+});
+
+// همچنین برای زمانی که کاربر صفحه را می‌چرخاند
+window.addEventListener('resize', initMobileUsersPanel);
+window.addEventListener('orientationchange', initMobileUsersPanel);
 
     </script>
 </body>
